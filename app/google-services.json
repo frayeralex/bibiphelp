@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "912620131863",
+    "firebase_url": "https://bibiphelp.firebaseio.com",
+    "project_id": "bibiphelp",
+    "storage_bucket": "bibiphelp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912620131863:android:6f2089c9528b65ef14ae52",
+        "android_client_info": {
+          "package_name": "com.github.frayeralex.bibiphelp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912620131863-cfritlj52mvlg83osm2a3h9qrc671ga7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGWYdqJRP8uAg284xUHdK9c7-zV6oKr40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912620131863-cfritlj52mvlg83osm2a3h9qrc671ga7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
