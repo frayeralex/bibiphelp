@@ -1,7 +1,9 @@
-package com.github.frayeralex.bibiphelp
+package com.github.frayeralex.bibiphelp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.github.frayeralex.bibiphelp.R
+
 
 class MainActivity : AppCompatActivity() {
 
