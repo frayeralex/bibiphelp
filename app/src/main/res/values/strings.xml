@@ -1,3 +1,16 @@
 <resources>
+    <!--App-->
     <string name="app_name">BiBipHelp</string>
+
+    <!--OnBoarding-->
+    <string name="onBoarding_title_1">Світ добрих людей</string>
+    <string name="onBoarding_description_1">Уяви собі світ, в кожному куточку якого у тебе є друг</string>
+
+    <string name="onBoarding_title_2">Герої всюди</string>
+    <string name="onBoarding_description_2">Світ, в якому кожен готовий відгукнутися на прохання один одного в будь-яку хвилину</string>
+
+    <string name="onBoarding_title_3">Ласкаво просимо в bibipHelp</string>
+    <string name="onBoarding_description_3">Цей доброзичливий світ - реальність. Ставай частиною bibipHelp і відчуй силу людської доброти!</string>
+
+    <string name="onBoarding_finish_btn">Розпочати</string>
 </resources>
