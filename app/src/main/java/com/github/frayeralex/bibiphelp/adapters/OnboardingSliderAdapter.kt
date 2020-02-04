@@ -25,9 +25,9 @@ class OnboardingSliderAdapter(private val context: Context) : PagerAdapter() {
     )
 
     private val backgroundList: List<Drawable> = listOf(
-        context.getDrawable(R.drawable.onBoard_1)!!,
-        context.getDrawable(R.drawable.onBoard_2)!!,
-        context.getDrawable(R.drawable.onBoard_3)!!
+        context.getDrawable(R.drawable.on_board_1)!!,
+        context.getDrawable(R.drawable.on_board_2)!!,
+        context.getDrawable(R.drawable.on_board_3)!!
     )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

@@ -95,7 +95,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun updateFinishButtonView(position: Int = 0) {
-        if (position == slideAdapter.count) {
+        if (position == slideAdapter.count - 1) {
             finishBtn.isEnabled = true
             finishBtn.visibility = View.VISIBLE
         } else {
