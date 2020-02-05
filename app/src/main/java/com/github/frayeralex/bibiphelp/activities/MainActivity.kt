@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        auth = FirebaseAuth.getInstance()
+
         eventsRef = FirebaseDatabase.getInstance().getReference(DB_EVENTS)
 
         eventsRef.addValueEventListener(object : ValueEventListener {
