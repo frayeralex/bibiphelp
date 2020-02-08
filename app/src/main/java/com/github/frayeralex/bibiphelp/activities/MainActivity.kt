@@ -1,11 +1,15 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
 import com.github.frayeralex.bibiphelp.R
 import android.content.res.Resources.NotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -79,6 +83,51 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.w(TAG, "Failed to read value.", error.toException())
             }
         })
+
+        checkLocationPermission()
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                // todo handle
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    ACCESS_FINE_LOCATION
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            ACCESS_FINE_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // todo show marker
+                } else {
+                    // todo
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+            else -> { }
+        }
     }
 
     private fun getPin(event: EventModel) = when (event.type) {
@@ -113,5 +162,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         const val TAG = "MAIN_ACTIVITY"
         const val DB_EVENTS = "events"
+        const val ACCESS_FINE_LOCATION = 0
     }
 }
