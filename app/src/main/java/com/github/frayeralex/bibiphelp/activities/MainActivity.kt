@@ -1,9 +1,10 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import com.github.frayeralex.bibiphelp.R
 import android.Manifest
 import android.content.pm.PackageManager
-import com.github.frayeralex.bibiphelp.R
 import android.content.res.Resources.NotFoundException
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -11,39 +12,47 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.models.EventModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var eventsRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val markerMap: MutableMap<String, Marker> = mutableMapOf()
+    private var myLocationMarker: Marker? = null
 
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
+
         if (currentUser == null) {
             auth.signInAnonymously()
                 .addOnCompleteListener(this) { task ->
+
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInAnonymously:success")
                         val user = auth.currentUser
+
+                        Toast.makeText(
+                            baseContext, user?.uid.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInAnonymously:failure", task.exception)
-                        Toast.makeText(baseContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
         }
@@ -57,32 +66,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
         auth = FirebaseAuth.getInstance()
-
         eventsRef = FirebaseDatabase.getInstance().getReference(DB_EVENTS)
-
-        eventsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                mMap.clear()
-                for (eventSnapshot in dataSnapshot.children) {
-                    val event = eventSnapshot.getValue(EventModel::class.java)
-                    if(event != null) {
-                        val marker = LatLng(event.lat!!, event.long!!)
-                        mMap.addMarker(
-                            MarkerOptions()
-                                .position(marker)
-                                .title(event.message)
-                                .icon(getPin(event))
-                        )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker))
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-        })
 
         checkLocationPermission()
     }
@@ -118,7 +105,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         when (requestCode) {
             ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // todo show marker
+                    fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
                 } else {
                     // todo
                     // permission denied, boo! Disable the
@@ -130,19 +117,92 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun getPin(event: EventModel) = when (event.type) {
-        "type_1" -> BitmapDescriptorFactory.fromResource(R.drawable.pin_1)
-        "type_2" -> BitmapDescriptorFactory.fromResource(R.drawable.pin_2)
-        "type_3" -> BitmapDescriptorFactory.fromResource(R.drawable.pin_3)
-        "type_4" -> BitmapDescriptorFactory.fromResource(R.drawable.pin_4)
-        "type_5" -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
-        else -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
+    private fun addMyLocationMarker(location: Location?) {
+        if (location != null) {
+            if (myLocationMarker == null) {
+                myLocationMarker = mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(location.latitude, location.longitude))
+                        .anchor((0.5).toFloat(), (0.5).toFloat())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
+                )
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         updateMapStyle()
+        listenEventChanges()
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(49.382667, 32.144928)))
+
+        mMap.setOnMarkerClickListener(this)
     }
+
+    private fun listenEventChanges() {
+        eventsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                handleEventChanged(dataSnapshot)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                handleEventChangeError(error)
+            }
+        })
+    }
+
+    private fun handleEventChanged(dataSnapshot: DataSnapshot) {
+        for (eventSnapshot in dataSnapshot.children) {
+            val event = eventSnapshot.getValue(EventModel::class.java)
+
+            updateEventMarkers(event)
+        }
+    }
+
+    private fun updateEventMarkers(event: EventModel?) {
+        if (event is EventModel && event.id != "") {
+            val marker = markerMap[event.id]
+
+            if (marker is Marker) {
+                marker.title = event.message
+                marker.position = LatLng(event.lat!!, event.long!!)
+
+                reDrawMarker(marker)
+            } else {
+                val newMarker = mMap.addMarker(event.getMapMarker())
+                newMarker.tag = event.id
+                markerMap.put(event.id!!, newMarker)
+            }
+        }
+    }
+
+    private fun handleEventChangeError(error: DatabaseError) {
+        Log.w(TAG, "Failed to read value.", error.toException())
+    }
+
+    private fun reDrawMarker(marker: Marker) {
+        val isInfoWindowShown = marker.isInfoWindowShown
+
+        marker.isVisible = false
+        marker.isVisible = true
+
+        if (isInfoWindowShown) {
+            marker.showInfoWindow()
+        }
+
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        val eventId = marker?.tag as String?
+
+        if (eventId != null) {
+            // todo add logic to show bottom popup
+            Log.d(TAG, "Event $eventId")
+        }
+
+        return false
+    }
+
 
     private fun updateMapStyle() {
         try {
@@ -162,6 +222,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         const val TAG = "MAIN_ACTIVITY"
         const val DB_EVENTS = "events"
-        const val ACCESS_FINE_LOCATION = 0
+        const val ACCESS_FINE_LOCATION = 1
     }
 }
