@@ -13,4 +13,7 @@
     <string name="onBoarding_description_3">Цей доброзичливий світ - реальність. Ставай частиною bibipHelp і відчуй силу людської доброти!</string>
 
     <string name="onBoarding_finish_btn">Розпочати</string>
+
+    <string name="main_help_btn">Допомогти</string>
+    <string name="main_hide_btn">Сховати</string>
 </resources>

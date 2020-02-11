@@ -7,6 +7,10 @@ import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -29,6 +33,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var eventsRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var bottomBar: LinearLayout
+    private lateinit var closeBtn: Button
 
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
@@ -66,12 +72,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        closeBtn = findViewById(R.id.closeBtn)
+        closeBtn.setOnClickListener { handleCloseBtnClick(it) }
+        bottomBar = findViewById(R.id.bottomBar)
+        bottomBar.setOnClickListener { handleCloseBtnClick(it) }
+        bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
         auth = FirebaseAuth.getInstance()
         eventsRef = FirebaseDatabase.getInstance().getReference(DB_EVENTS)
+    }
 
-        checkLocationPermission()
+    private fun handleCloseBtnClick(view: View) {
+        fadeOut(bottomBar)
+    }
+
+    private fun fadeOut(view: View) {
+        view.animate()
+            .setDuration(DEFAULT_ANIMATION_DURATION.toLong())
+            .translationY(view.height.toFloat())
+            .setListener(null)
+    }
+
+    private fun fadeIn(view: View) {
+        view.animate()
+            .setDuration(DEFAULT_ANIMATION_DURATION.toLong())
+            .translationY(0f)
+            .setListener(null)
     }
 
     private fun checkLocationPermission() {
@@ -126,6 +152,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .anchor((0.5).toFloat(), (0.5).toFloat())
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
                 )
+
+                mMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(location.latitude, location.longitude)))
             }
         }
     }
@@ -134,8 +162,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap = googleMap
         updateMapStyle()
         listenEventChanges()
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(49.382667, 32.144928)))
+        checkLocationPermission()
 
+        fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
         mMap.setOnMarkerClickListener(this)
     }
 
@@ -153,9 +182,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun handleEventChanged(dataSnapshot: DataSnapshot) {
         for (eventSnapshot in dataSnapshot.children) {
-            val event = eventSnapshot.getValue(EventModel::class.java)
-
-            updateEventMarkers(event)
+            updateEventMarkers(eventSnapshot.getValue(EventModel::class.java))
         }
     }
 
@@ -189,15 +216,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (isInfoWindowShown) {
             marker.showInfoWindow()
         }
-
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         val eventId = marker?.tag as String?
 
         if (eventId != null) {
-            // todo add logic to show bottom popup
-            Log.d(TAG, "Event $eventId")
+            val label = findViewById<TextView>(R.id.bottomTypeLabel)
+            label.text = marker!!.title
+
+            if (bottomBar.translationY != 0f) {
+                fadeIn(bottomBar)
+            }
         }
 
         return false
@@ -206,16 +236,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun updateMapStyle() {
         try {
-            val success = mMap.setMapStyle(
+            mMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
                     this, R.raw.map_styles
                 )
             )
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.")
-            }
         } catch (e: NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", e)
         }
     }
 
@@ -223,5 +249,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         const val TAG = "MAIN_ACTIVITY"
         const val DB_EVENTS = "events"
         const val ACCESS_FINE_LOCATION = 1
+        const val DEFAULT_ANIMATION_DURATION = 300
     }
 }
