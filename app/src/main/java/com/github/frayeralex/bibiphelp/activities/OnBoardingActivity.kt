@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.github.frayeralex.bibiphelp.adapters.OnboardingSliderAdapter
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.list_users.ActivityList
+import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -21,6 +24,11 @@ class OnBoardingActivity : AppCompatActivity() {
     private lateinit var sliderDots: LinearLayout
     private lateinit var finishBtn: Button
     private var currentSlide: Int = 0
+
+    init {
+        SingltonUser.mlistEvents
+        Log.d("fff9", "${SingltonUser.mlistEvents.toString()}")
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +57,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun clickHandler() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, ActivityList::class.java))
 
         finish()
     }

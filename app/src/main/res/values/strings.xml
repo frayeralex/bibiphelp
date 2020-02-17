@@ -13,4 +13,17 @@
     <string name="onBoarding_description_3">Цей доброзичливий світ - реальність. Ставай частиною bibipHelp і відчуй силу людської доброти!</string>
 
     <string name="onBoarding_finish_btn">Розпочати</string>
+    <string name="user_name">User name</string>
+
+    <string name="srun_out_of_fuel">Закінчилось паливо</string>
+    <string name="swheel_replacement">Заміна колеса</string>
+    <string name="slow_battery">Розряджений акумулятор</string>
+    <string name="sstuck_in_the_snow">Застряг у снігу</string>
+    <string name="stowing">Буксируванян</string>
+    <string name="sother">Інше</string>
+
+
+
+
+
 </resources>

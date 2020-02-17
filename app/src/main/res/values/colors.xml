@@ -6,4 +6,14 @@
     <color name="blackTransparent">#50000000</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="recycler_background">#E5E5E5</color>
+    <color name="run_out_of_fuel">#F0CC64</color>
+    <color name="wheel_replacement">#F87F7F</color>
+    <color name="low_battery">#339784CC</color>
+    <color name="stuck_in_the_snow">#97CC84</color>
+    <color name="towing">#70D3F2</color>
+    <color name="other">#FF7A00</color>
+
+    
+
 </resources>

@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".list_users.ActivityList"/>
+        <activity android:name=".list_users.ActivityUserPager"/>
         <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.OnBoardingActivity" android:screenOrientation="portrait" />
     </application>
