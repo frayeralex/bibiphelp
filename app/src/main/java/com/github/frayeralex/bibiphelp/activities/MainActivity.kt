@@ -2,6 +2,7 @@ package com.github.frayeralex.bibiphelp.activities
 
 import com.github.frayeralex.bibiphelp.R
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources.NotFoundException
 import android.location.Location
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var bottomBar: LinearLayout
-    private lateinit var closeBtn: Button
+    private lateinit var askHelpBtn: Button
 
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
@@ -80,10 +81,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        closeBtn = findViewById(R.id.closeBtn)
-        closeBtn.setOnClickListener { handleCloseBtnClick(it) }
+        askHelpBtn = findViewById(R.id.button_help)
+        askHelpBtn.setOnClickListener { handleAskHelpBtnClick(it) }
+
         bottomBar = findViewById(R.id.bottomBar)
         bottomBar.setOnClickListener { handleCloseBtnClick(it) }
+
         bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         auth = FirebaseAuth.getInstance()
@@ -103,6 +106,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun handleCloseBtnClick(view: View) {
         fadeOut(bottomBar)
+    }
+
+    private fun handleAskHelpBtnClick(view: View) {
+        val intent = Intent(this, CategoriesActivity::class.java)
+        startActivity(intent)
     }
 
     private fun fadeOut(view: View) {
@@ -179,12 +187,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.uiSettings.isRotateGesturesEnabled = false
+        mMap.setOnMarkerClickListener(this)
+
         updateMapStyle()
         listenEventChanges()
         checkLocationPermission()
 
         fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
-        mMap.setOnMarkerClickListener(this)
     }
 
     private fun listenEventChanges() {

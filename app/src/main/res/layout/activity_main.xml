@@ -58,8 +58,10 @@
         <TextView
             android:id="@+id/bottomTypeLabel"
             style="@style/PrimaryText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="40sp"
+            android:layout_marginBottom="20dp"
             android:text="" />
 
         <Button
@@ -75,8 +77,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_hide_btn" />
-
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_help"
+        style="@style/PrimaryBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/main_ask_help_btn"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
