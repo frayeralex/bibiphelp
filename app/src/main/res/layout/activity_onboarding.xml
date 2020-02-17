@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/sliderViewPager"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/sliderDots"
@@ -17,18 +16,20 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:orientation="horizontal" />
 
     <Button
         android:id="@+id/buttonFinish"
+        style="@style/PrimaryBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:enabled="false"
-        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/onBoarding_finish_btn" />
+        android:enabled="false"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:text="@string/onBoarding_finish_btn"
+        android:visibility="invisible" />
 </RelativeLayout>
