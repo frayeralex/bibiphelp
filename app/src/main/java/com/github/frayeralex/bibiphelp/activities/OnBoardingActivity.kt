@@ -57,7 +57,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun clickHandler() {
-        startActivity(Intent(this, ActivityList::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
 
         finish()
     }
