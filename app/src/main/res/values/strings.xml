@@ -2,6 +2,9 @@
     <!--App-->
     <string name="app_name">BiBipHelp</string>
 
+    <!--Labels-->
+    <string name="label_categories">Оберіть категорії</string>
+
     <!--OnBoarding-->
     <string name="onBoarding_title_1">Світ добрих людей</string>
     <string name="onBoarding_description_1">Уяви собі світ, в кожному куточку якого у тебе є друг</string>
@@ -13,6 +16,13 @@
     <string name="onBoarding_description_3">Цей доброзичливий світ - реальність. Ставай частиною bibipHelp і відчуй силу людської доброти!</string>
 
     <string name="onBoarding_finish_btn">Розпочати</string>
+    <string name="main_help_btn">Допомогти</string>
+    <string name="main_ask_help_btn">Потрібна допомога</string>
+    <string name="main_hide_btn">Сховати</string>
+
+
+    <string name="toolbar_list_action">Список</string>
+
     <string name="user_name">User name</string>
 
     <string name="srun_out_of_fuel">Закінчилось паливо</string>
@@ -21,9 +31,4 @@
     <string name="sstuck_in_the_snow">Застряг у снігу</string>
     <string name="stowing">Буксируванян</string>
     <string name="sother">Інше</string>
-
-
-
-
-
 </resources>
