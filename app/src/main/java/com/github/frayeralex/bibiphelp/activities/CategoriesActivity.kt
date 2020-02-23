@@ -1,5 +1,6 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.graphics.Color
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
+import com.github.frayeralex.bibiphelp.models.EventCategoryModelUtils
 import com.google.firebase.database.*
 
 class CategoriesActivity : AppCompatActivity() {
@@ -57,8 +59,11 @@ class CategoriesActivity : AppCompatActivity() {
     }
 
     private fun handleItemClick(view: View?) {
-        // todo add start activity with selected category id
-        Log.d(TAG, view?.id.toString())
+        if (view?.id != null) {
+            val intent = Intent(this, HelpFormActivity::class.java)
+            intent.putExtra(CATEGORY_ID_KEY, view.id)
+            startActivity(intent)
+        }
     }
 
     private fun createCategoryItem(category: EventCategoryModel): LinearLayout {
@@ -68,7 +73,7 @@ class CategoriesActivity : AppCompatActivity() {
         }
 
 
-        listItem.setPadding(20,30,20,30)
+        listItem.setPadding(20, 30, 20, 30)
 
         listItem.setBackgroundColor(Color.WHITE)
         val params = LinearLayout.LayoutParams(
@@ -105,7 +110,7 @@ class CategoriesActivity : AppCompatActivity() {
 
         img.layoutParams = params
 
-        img.setImageResource(category.getImgResource())
+        img.setImageResource(EventCategoryModelUtils.getImgResource(category))
 
         return img
     }
@@ -117,5 +122,6 @@ class CategoriesActivity : AppCompatActivity() {
     companion object {
         const val TAG = "CATEGORIES_ACTIVITY"
         const val DB_CATEGORIES = "categories"
+        const val CATEGORY_ID_KEY = "CATEGORY_ID_KEY"
     }
 }

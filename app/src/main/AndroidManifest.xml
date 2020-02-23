@@ -30,12 +30,10 @@
         <activity
             android:name=".activities.CategoriesActivity"
             android:parentActivityName=".activities.MainActivity"
-            android:label="@string/label_categories">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
+            android:label="@string/label_categories"/>
+        <activity
+            android:name=".activities.HelpFormActivity"
+            android:parentActivityName=".activities.CategoriesActivity"/>
         <activity
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
