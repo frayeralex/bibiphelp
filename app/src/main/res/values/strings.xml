@@ -22,12 +22,29 @@
     <string name="onBoarding_title_3">Ласкаво просимо в bibipHelp</string>
     <string name="onBoarding_description_3">Цей доброзичливий світ - реальність. Ставай частиною bibipHelp і відчуй силу людської доброти!</string>
 
-    <string name="onBoarding_finish_btn">Почати</string>
-
+    <string name="onBoarding_finish_btn">Розпочати</string>
     <string name="main_help_btn">Допомогти</string>
     <string name="main_ask_help_btn">Потрібна допомога</string>
     <string name="main_hide_btn">Сховати</string>
 
 
     <string name="toolbar_list_action">Список</string>
+
+    <string name="user_name">User name</string>
+    <string name="map">Карта</string>
+
+    <string name="srun_out_of_fuel">Закінчилось паливо</string>
+    <string name="sheel_replacement">Заміна колеса</string>
+    <string name="slow_battery">Розряджений акумулятор</string>
+    <string name="sstuck_in_the_snow">Застряг у снігу</string>
+    <string name="stowing">Буксируванян</string>
+    <string name="sother">Інше</string>
+    <string name="example">2.	Добавьте свой закрытый ключ SSH в ssh-agent. Если вы создали свой ключ с другим именем или добавляете
+        существующий ключ с другим именем, замените в команде id_rsa на имя вашего файла закрытого ключа</string>
+    <string name="help">Допомогти</string>
+
+
+
+
+
 </resources>

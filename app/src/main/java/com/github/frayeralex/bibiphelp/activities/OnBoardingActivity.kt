@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.github.frayeralex.bibiphelp.adapters.OnboardingSliderAdapter
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.list_users.ActivityList
+import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -21,6 +24,10 @@ class OnBoardingActivity : AppCompatActivity() {
     private lateinit var sliderDots: LinearLayout
     private lateinit var finishBtn: Button
     private var currentSlide: Int = 0
+
+    init {
+        SingltonUser.mlistEvents
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +52,7 @@ class OnBoardingActivity : AppCompatActivity() {
         updateFinishButtonView(currentSlide)
 
         viewPager.addOnPageChangeListener(slideListener)
-        finishBtn.setOnClickListener{ clickHandler() }
+        finishBtn.setOnClickListener { clickHandler() }
     }
 
     private fun clickHandler() {
@@ -73,26 +80,32 @@ class OnBoardingActivity : AppCompatActivity() {
                 dot.setTextColor(resources.getColor(R.color.blackTransparent))
             }
 
+
             sliderDots.addView(dot)
         }
     }
 
-    private val slideListener: ViewPager.OnPageChangeListener = object: ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {
+    private val slideListener: ViewPager.OnPageChangeListener =
+        object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentSlide = position
+
+                addDotIndicator(position)
+                updateFinishButtonView(position)
+            }
         }
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-        }
-
-        override fun onPageSelected(position: Int) {
-            currentSlide = position
-
-            addDotIndicator(position)
-            updateFinishButtonView(position)
-        }
-    }
 
     private fun updateFinishButtonView(position: Int = 0) {
         if (position == slideAdapter.count - 1) {
