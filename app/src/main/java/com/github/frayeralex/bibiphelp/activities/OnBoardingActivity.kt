@@ -81,6 +81,7 @@ class OnBoardingActivity : AppCompatActivity() {
                 dot.setTextColor(resources.getColor(R.color.blackTransparent))
             }
 
+
             sliderDots.addView(dot)
         }
     }

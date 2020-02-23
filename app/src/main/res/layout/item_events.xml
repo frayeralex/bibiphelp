@@ -67,7 +67,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/distance"
             app:layout_constraintEnd_toStartOf="@+id/distance"
             app:layout_constraintTop_toTopOf="@+id/distance"
-            app:srcCompat="@drawable/car" />
+            app:srcCompat="@drawable/vector_car"
+            android:contentDescription="TODO" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

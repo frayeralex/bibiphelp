@@ -1,17 +1,13 @@
 package com.github.frayeralex.bibiphelp.list_users
-import android.app.Activity
+
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.OnClickListener
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getColor
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +16,27 @@ import com.github.frayeralex.bibiphelp.list_users.SingltonUser.getListEvent
 import com.github.frayeralex.bibiphelp.models.EventModel
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.item_events.view.*
-import kotlin.collections.ArrayList
+
 
 class FragmentList : Fragment() {
 
     val mUserAdapter: UserAdapter = UserAdapter(getListEvent())
     lateinit var myRecyclerView: RecyclerView
+
+
+
+
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d ("ddd","565")
+        setHasOptionsMenu(true)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,14 +45,15 @@ class FragmentList : Fragment() {
     ): View? {
 
         val view: View = inflater.inflate(R.layout.fragment_list, container, false)
+        Log.d ("ddd","575")
+
+        val toolbar:androidx.appcompat.widget.Toolbar = view.findViewById(R.id.list_toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
         myRecyclerView = view.myRecyclerView
-
-
         myRecyclerView.layoutManager = LinearLayoutManager(context)
         myRecyclerView.setHasFixedSize(true)
         updateUI()
-
         return view
     }
 
@@ -49,7 +61,6 @@ class FragmentList : Fragment() {
 
         myRecyclerView.adapter = mUserAdapter
         Log.d ("fff4", "${SingltonUser.mlistEvents.toString()}")
-
         mUserAdapter.notifyDataSetChanged()
 
    }
@@ -64,20 +75,55 @@ class FragmentList : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onDestroy() {
         super.onDestroy()
     }
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        Log.d ("ddd","999")
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.toolbar_list_activity, menu)
+
+    }
+
+
+        override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+            R.id.action_map_view -> {
+                Log.d ("ddd","777")
+                val intent = ActivityList.backMainActivity(context)
+                startActivity(intent)
+                true
+            }
+
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     inner class UserAdapter(val dataEvents: ArrayList<EventModel?>) : RecyclerView.Adapter<UserHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             return UserHolder(layoutInflater.inflate(R.layout.item_events, parent, false))
-            Log.d ("fff1", "${dataEvents[2].toString()}")
+           // Log.d ("fff1", "${dataEvents[2].toString()}")
 
         }
 
@@ -123,7 +169,7 @@ class FragmentList : Fragment() {
 
         private fun getType(event: EventModel) = when (event.type) {
             "type_1" -> R.string.srun_out_of_fuel
-            "type_2" -> R.string.swheel_replacement
+            "type_2" -> R.string.sheel_replacement
             "type_3" -> R.string.slow_battery
             "type_4" -> R.string.sstuck_in_the_snow
             "type_5" -> R.string.stowing

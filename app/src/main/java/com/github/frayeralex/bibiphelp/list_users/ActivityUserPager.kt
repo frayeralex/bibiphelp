@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.activities.MainActivity
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser.mlistEvents
 import com.github.frayeralex.bibiphelp.models.EventModel
 import kotlinx.android.synthetic.main.activiti_user_page.*
@@ -23,6 +24,10 @@ class ActivityUserPager : AppCompatActivity() {
             intent.putExtra(EXTRA_ID, userId)
             return intent
         }
+
+
+
+
     }
 
     val listEvents: List<EventModel?> = mlistEvents
@@ -30,8 +35,8 @@ class ActivityUserPager : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activiti_user_page)
-        val userId = intent.getStringExtra(EXTRA_ID)
 
+        val userId = intent.getStringExtra(EXTRA_ID)
         val pagerUser = pager_user
         val fragmentManager = supportFragmentManager
         pagerUser.adapter = (object : FragmentStatePagerAdapter(fragmentManager) {
@@ -40,8 +45,6 @@ class ActivityUserPager : AppCompatActivity() {
             override fun getItem(position: Int): Fragment {
                 val dataEvent = listEvents.get(position)
                 return FragmentUser.newInstanse(dataEvent?.id)
-
-
             }
 
 

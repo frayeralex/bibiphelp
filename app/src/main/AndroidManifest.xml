@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,29 +18,37 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activities.SplashActivity" android:theme="@style/AppTheme.Launcher" android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity" />
+
+        <activity android:name=".activities.MainActivity" />
+
         <activity
             android:name=".activities.CategoriesActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="@string/label_categories">
+            android:label="@string/label_categories"
+            android:parentActivityName=".activities.MainActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".list_users.ActivityList"/>
-        <activity android:name=".list_users.ActivityUserPager"/>
+
+
+
+        <activity android:name=".list_users.ActivityUserPager" />
     </application>
 
 </manifest>

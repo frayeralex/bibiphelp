@@ -24,6 +24,7 @@
     <string name="toolbar_list_action">Список</string>
 
     <string name="user_name">User name</string>
+    <string name="map">Карта</string>
 
     <string name="srun_out_of_fuel">Закінчилось паливо</string>
     <string name="sheel_replacement">Заміна колеса</string>

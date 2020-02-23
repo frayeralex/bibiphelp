@@ -18,6 +18,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.frayeralex.bibiphelp.list_users.ActivityList
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -46,7 +47,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onStart() {
         super.onStart()
+        Log.d ("zzz1", "${auth.toString()}")
         val currentUser = auth.currentUser
+
 
         if (currentUser == null) {
             auth.signInAnonymously()
@@ -89,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         bottomBar = findViewById(R.id.bottomBar)
         bottomBar.setOnClickListener { handleCloseBtnClick(it) }
 
-        bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
+        bottomBar.post {bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         auth = FirebaseAuth.getInstance()
         eventsRef = FirebaseDatabase.getInstance().getReference(DB_EVENTS)
@@ -97,7 +100,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
-            //todo: implement intent to ListViewActivity
+            Log.d ("ddd","qwer")
+            val intent = Intent(this, ActivityList::class.java)
+            startActivity(intent)
             true
         }
 
@@ -107,7 +112,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun handleCloseBtnClick(view: View) {
-        fadeOut(bottomBar)
+        fadeOut( bottomBar)
     }
 
     private fun handleAskHelpBtnClick(view: View) {
@@ -237,6 +242,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun handleEventChangeError(error: DatabaseError) {
         Log.w(TAG, "Failed to read value.", error.toException())
+
     }
 
     private fun reDrawMarker(marker: Marker) {
