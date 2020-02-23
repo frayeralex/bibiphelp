@@ -7,6 +7,6 @@
         android:title="@string/toolbar_list_action"
         android:visible="true"
         android:enabled="true"
-        app:showAsAction="always"/>
+        app:showAsAction="always|withText"/>
 </menu>
 

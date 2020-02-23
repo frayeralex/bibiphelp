@@ -18,6 +18,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.frayeralex.bibiphelp.list_users.ActivityList
+import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -95,7 +98,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
-            //todo: implement intent to ListViewActivity
+            val intent = Intent(this, ActivityList::class.java)
+            startActivity(intent)
             true
         }
 
@@ -166,7 +170,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
                 return
             }
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -180,7 +185,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
                 )
 
-                mMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(location.latitude, location.longitude)))
+                mMap?.moveCamera(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(
+                            location.latitude,
+                            location.longitude
+                        )
+                    )
+                )
             }
         }
     }
@@ -235,6 +247,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun handleEventChangeError(error: DatabaseError) {
         Log.w(TAG, "Failed to read value.", error.toException())
+
     }
 
     private fun reDrawMarker(marker: Marker) {
