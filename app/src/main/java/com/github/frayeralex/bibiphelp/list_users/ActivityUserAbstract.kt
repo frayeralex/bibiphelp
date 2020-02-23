@@ -22,20 +22,16 @@ abstract class ActivityUserAbstract : AppCompatActivity() {
         setContentView(R.layout.activity_user)
 
 
-
         val fragment: Fragment? = mFragmentManager.findFragmentById(R.id.fragment_container)
 
         if (fragment == null) {
-            mFragmentManager.beginTransaction().add(R.id.fragment_container, createFragment()).commit()
-
+            mFragmentManager.beginTransaction().add(R.id.fragment_container, createFragment())
+                .commit()
         }
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_map_view -> {
-            Log.d ("ddd","555")
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             true
@@ -45,11 +41,9 @@ abstract class ActivityUserAbstract : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
+
     override fun onResume() {
-
         super.onResume()
-
-        Log.d ("fff8", "${SingltonUser.mlistEvents.toString()}")
     }
 
 }

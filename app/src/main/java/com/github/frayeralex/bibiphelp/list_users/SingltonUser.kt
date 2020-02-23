@@ -37,7 +37,6 @@ object SingltonUser {
         return mlistEvents
     }
 
-
     fun getId(id: String?): EventModel? {
         for (n in mlistEvents) if (n?.id == id) return n
         return null

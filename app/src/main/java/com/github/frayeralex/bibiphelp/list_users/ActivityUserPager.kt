@@ -24,10 +24,6 @@ class ActivityUserPager : AppCompatActivity() {
             intent.putExtra(EXTRA_ID, userId)
             return intent
         }
-
-
-
-
     }
 
     val listEvents: List<EventModel?> = mlistEvents

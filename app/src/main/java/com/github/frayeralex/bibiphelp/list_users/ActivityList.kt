@@ -12,17 +12,15 @@ import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.activities.MainActivity
 
 
-class ActivityList: ActivityUserAbstract() {
+class ActivityList : ActivityUserAbstract() {
 
 
     override fun createFragment(): Fragment {
-        Log.d ("fff7", "${SingltonUser.mlistEvents.toString() }")
-
         return FragmentList()
     }
 
     companion object {
-        fun backMainActivity(context: Context?):Intent {
+        fun backMainActivity(context: Context?): Intent {
             val intent = Intent(context, MainActivity::class.java)
             return intent
         }

@@ -26,7 +26,6 @@ class FragmentUser : Fragment() {
             fragment.arguments = arg
             return fragment
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +41,6 @@ class FragmentUser : Fragment() {
         val id = arguments?.getString(ARG_USER_ID)
         val dataEvent = SingltonUser.getId(id)
         view.title_datalied.text = dataEvent?.message ?: ""
-
-
         return view
     }
-
-
-
-
 }

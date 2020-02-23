@@ -27,7 +27,6 @@ class OnBoardingActivity : AppCompatActivity() {
 
     init {
         SingltonUser.mlistEvents
-        Log.d("fff9", "${SingltonUser.mlistEvents.toString()}")
     }
 
 
@@ -53,7 +52,7 @@ class OnBoardingActivity : AppCompatActivity() {
         updateFinishButtonView(currentSlide)
 
         viewPager.addOnPageChangeListener(slideListener)
-        finishBtn.setOnClickListener{ clickHandler() }
+        finishBtn.setOnClickListener { clickHandler() }
     }
 
     private fun clickHandler() {
@@ -86,22 +85,27 @@ class OnBoardingActivity : AppCompatActivity() {
         }
     }
 
-    private val slideListener: ViewPager.OnPageChangeListener = object: ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {
+    private val slideListener: ViewPager.OnPageChangeListener =
+        object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentSlide = position
+
+                addDotIndicator(position)
+                updateFinishButtonView(position)
+            }
         }
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-        }
-
-        override fun onPageSelected(position: Int) {
-            currentSlide = position
-
-            addDotIndicator(position)
-            updateFinishButtonView(position)
-        }
-    }
 
     private fun updateFinishButtonView(position: Int = 0) {
         if (position == slideAdapter.count - 1) {
