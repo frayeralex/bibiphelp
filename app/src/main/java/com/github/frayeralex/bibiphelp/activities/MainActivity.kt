@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.list_users.ActivityList
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 import com.github.frayeralex.bibiphelp.models.EventModel
+import com.github.frayeralex.bibiphelp.models.EventModelUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -238,7 +239,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                 reDrawMarker(marker)
             } else {
-                val newMarker = mMap.addMarker(event.getMapMarker())
+                val newMarker = mMap.addMarker(EventModelUtils.getMapMarker(event))
                 newMarker.tag = event.id
                 markerMap.put(event.id!!, newMarker)
             }

@@ -5,6 +5,13 @@
     <!--Labels-->
     <string name="label_categories">Оберіть категорії</string>
 
+    <!--Buttons-->
+    <string name="btn_publish">Опублікувати</string>
+
+    <!--Help Form-->
+    <string name="help_input_label">Опишіть проблему</string>
+    <string name="help_input_label_empty">Опис проблеми э обовязковим</string>
+
     <!--OnBoarding-->
     <string name="onBoarding_title_1">Світ добрих людей</string>
     <string name="onBoarding_description_1">Уяви собі світ, в кожному куточку якого у тебе є друг</string>
