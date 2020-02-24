@@ -14,6 +14,7 @@ data class EventModel(
     var id: String? = "",
     var type: Int? = EventTypes.OTHER,
     var message: String? = "",
+    var createdAt: Long? = 0,
     var userId: String? = "",
     var lat: Double? = 0.0,
     var long: Double? = 0.0
