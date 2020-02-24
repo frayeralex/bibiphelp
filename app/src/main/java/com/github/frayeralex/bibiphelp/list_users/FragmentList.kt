@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.constatns.EventTypes
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser.getListEvent
 import com.github.frayeralex.bibiphelp.models.EventModel
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -137,20 +138,20 @@ class FragmentList : Fragment() {
         }
 
         private fun getType(event: EventModel) = when (event.type) {
-            "type_1" -> R.string.srun_out_of_fuel
-            "type_2" -> R.string.sheel_replacement
-            "type_3" -> R.string.slow_battery
-            "type_4" -> R.string.sstuck_in_the_snow
-            "type_5" -> R.string.stowing
+            EventTypes.OIL -> R.string.srun_out_of_fuel
+            EventTypes.WHEEL -> R.string.sheel_replacement
+            EventTypes.ENERGY -> R.string.slow_battery
+            EventTypes.SNOW -> R.string.sstuck_in_the_snow
+            EventTypes.TOWING -> R.string.stowing
             else -> R.string.sother
         }
 
         private fun getTypeColor(event: EventModel) = when (event.type) {
-            "type_1" -> R.color.run_out_of_fuel
-            "type_2" -> R.color.wheel_replacement
-            "type_3" -> R.color.low_battery
-            "type_4" -> R.color.stuck_in_the_snow
-            "type_5" -> R.color.towing
+            EventTypes.OIL -> R.color.run_out_of_fuel
+            EventTypes.WHEEL -> R.color.wheel_replacement
+            EventTypes.ENERGY -> R.color.low_battery
+            EventTypes.SNOW -> R.color.stuck_in_the_snow
+            EventTypes.TOWING -> R.color.towing
             else -> R.color.other
         }
 
