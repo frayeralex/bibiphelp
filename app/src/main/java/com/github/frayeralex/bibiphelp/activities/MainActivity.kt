@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -15,13 +14,14 @@ import android.widget.TextView
 import android.widget.Toast
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.list_users.ActivityList
-import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.models.EventModelUtils
+import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,14 +30,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.lifecycle.Observer
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    private val viewModel by viewModels<ListEventViewModel>()
     private lateinit var mMap: GoogleMap
-    private lateinit var eventsRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var bottomBar: LinearLayout
@@ -94,7 +93,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         auth = FirebaseAuth.getInstance()
-        eventsRef = FirebaseDatabase.getInstance().getReference(DB_EVENTS)
+    }
+
+    private fun handleEventsUpdated(events: MutableList<EventModel>?) {
+        events?.forEach { updateEventMarkers(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -186,14 +188,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
                 )
 
-                mMap?.moveCamera(
-                    CameraUpdateFactory.newLatLng(
-                        LatLng(
-                            location.latitude,
-                            location.longitude
+                try {
+                    mMap.moveCamera(
+                        CameraUpdateFactory.newLatLng(
+                            LatLng(
+                                location.latitude,
+                                location.longitude
+                            )
                         )
                     )
-                )
+                } catch (e: NotFoundException) {
+                }
             }
         }
     }
@@ -201,32 +206,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isMapToolbarEnabled = false
-        mMap.uiSettings.isRotateGesturesEnabled = false
         mMap.setOnMarkerClickListener(this)
 
         updateMapStyle()
-        listenEventChanges()
         checkLocationPermission()
 
+        viewModel.getEvents()
+            .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
+
         fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
-    }
-
-    private fun listenEventChanges() {
-        eventsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                handleEventChanged(dataSnapshot)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                handleEventChangeError(error)
-            }
-        })
-    }
-
-    private fun handleEventChanged(dataSnapshot: DataSnapshot) {
-        for (eventSnapshot in dataSnapshot.children) {
-            updateEventMarkers(eventSnapshot.getValue(EventModel::class.java))
-        }
     }
 
     private fun updateEventMarkers(event: EventModel?) {
@@ -244,11 +232,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 markerMap.put(event.id!!, newMarker)
             }
         }
-    }
-
-    private fun handleEventChangeError(error: DatabaseError) {
-        Log.w(TAG, "Failed to read value.", error.toException())
-
     }
 
     private fun reDrawMarker(marker: Marker) {
@@ -291,7 +274,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     companion object {
         const val TAG = "MAIN_ACTIVITY"
-        const val DB_EVENTS = "events"
         const val ACCESS_FINE_LOCATION = 1
         const val DEFAULT_ANIMATION_DURATION = 300
     }
