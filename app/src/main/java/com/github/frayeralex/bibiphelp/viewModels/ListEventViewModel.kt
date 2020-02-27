@@ -1,20 +1,23 @@
 package com.github.frayeralex.bibiphelp.viewModels
 
+import android.app.Application
 import com.github.frayeralex.bibiphelp.models.EventModel
-
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
+import com.github.frayeralex.bibiphelp.liveDatas.LocationLiveData
 import com.github.frayeralex.bibiphelp.repository.FBRefs
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import java.lang.Error
 
-class ListEventViewModel : ViewModel() {
+class ListEventViewModel(application: Application) : AndroidViewModel(application) {
     private val events: MutableLiveData<MutableList<EventModel>> = MutableLiveData()
+
+    private val locationData = LocationLiveData(application)
 
     private val eventsStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
 
@@ -48,6 +51,8 @@ class ListEventViewModel : ViewModel() {
         }
         return events
     }
+
+    fun getLocationData() = locationData
 
     companion object {
         const val TAG = "ListEventViewModel"

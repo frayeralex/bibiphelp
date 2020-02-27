@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.Observer
 
-
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private val viewModel by viewModels<ListEventViewModel>()
@@ -165,7 +164,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         when (requestCode) {
             ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
+                    fusedLocationClient.lastLocation.addOnSuccessListener {
+                        updateMyLocationMarker(
+                            it
+                        )
+                    }
                 } else {
                     // todo
                     // permission denied, boo! Disable the
@@ -178,7 +181,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private fun addMyLocationMarker(location: Location?) {
+    private fun updateMyLocationMarker(location: Location?) {
         if (location != null) {
             if (myLocationMarker == null) {
                 myLocationMarker = mMap.addMarker(
@@ -214,7 +217,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         viewModel.getEvents()
             .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { addMyLocationMarker(it) }
+        viewModel.getLocationData()
+            .observe(this, Observer<Location> { updateMyLocationMarker(it) })
     }
 
     private fun updateEventMarkers(event: EventModel?) {
