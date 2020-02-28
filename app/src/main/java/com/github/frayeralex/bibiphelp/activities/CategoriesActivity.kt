@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.graphics.Color
 import android.view.Gravity
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -56,18 +55,17 @@ class CategoriesActivity : AppCompatActivity() {
             listItem.addView(createCategoryImage(it))
             listItem.addView(createCategoryLabel(it))
 
-            listItem.setOnClickListener { view -> handleItemClick(view) }
+            listItem.setOnClickListener { _ -> handleItemClick(it.id!!, it.label!!) }
 
             categoryList.addView(listItem)
         }
     }
 
-    private fun handleItemClick(view: View?) {
-        if (view?.id != null) {
-            val intent = Intent(this, HelpFormActivity::class.java)
-            intent.putExtra(CATEGORY_ID_KEY, view.id)
-            startActivity(intent)
-        }
+    private fun handleItemClick(id: Int, categoryLabel: String) {
+        val intent = Intent(this, HelpFormActivity::class.java)
+        intent.putExtra(CATEGORY_ID_KEY, id)
+        intent.putExtra(CATEGORY_LABEL, categoryLabel)
+        startActivity(intent)
     }
 
     private fun createCategoryItem(category: EventCategoryModel): LinearLayout {
@@ -121,5 +119,6 @@ class CategoriesActivity : AppCompatActivity() {
 
     companion object {
         const val CATEGORY_ID_KEY = "CATEGORY_ID_KEY"
+        const val CATEGORY_LABEL = "CATEGORY_TITLE"
     }
 }
