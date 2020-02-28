@@ -92,10 +92,10 @@ class HelpFormActivity : AppCompatActivity() {
 
         viewModel.getCreatedEventId().observe(this, Observer {
             if (it != null) {
-                Log.d("OPACHA", it)
                 val intent = Intent(this, WaitHelpActivity::class.java)
                 intent.putExtra(EVENT_ID, it)
                 startActivity(intent)
+                finish()
             }
         })
     }
