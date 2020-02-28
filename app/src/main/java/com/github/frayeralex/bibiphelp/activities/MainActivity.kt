@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -29,44 +28,20 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.Observer
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private val viewModel by viewModels<ListEventViewModel>()
     private lateinit var mMap: GoogleMap
-    private lateinit var auth: FirebaseAuth
+    private var user : FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var bottomBar: LinearLayout
     private lateinit var askHelpBtn: Button
 
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
-
-    override fun onStart() {
-        super.onStart()
-
-        if (auth.currentUser == null) {
-            auth.signInAnonymously()
-                .addOnCompleteListener(this) { task ->
-
-                    if (task.isSuccessful) {
-                        val user = auth.currentUser
-
-                        Toast.makeText(
-                            baseContext, user?.uid.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            baseContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
@@ -90,11 +65,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        auth = FirebaseAuth.getInstance()
+
+        viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
-        events?.filter { event -> event.userId != auth.currentUser?.uid }
+        events?.filter { event -> event.userId != user?.uid }
             ?.forEach { updateEventMarkers(it) }
     }
 

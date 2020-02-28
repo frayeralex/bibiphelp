@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.liveDatas.LocationLiveData
+import com.github.frayeralex.bibiphelp.liveDatas.UserLiveData
 import com.github.frayeralex.bibiphelp.repository.FBRefs
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,6 +19,8 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
     private val events: MutableLiveData<MutableList<EventModel>> = MutableLiveData()
 
     private val locationData = LocationLiveData(application)
+
+    private val user = UserLiveData()
 
     private val eventsStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
 
@@ -53,6 +56,8 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun getLocationData() = locationData
+
+    fun getUser() = user
 
     companion object {
         const val TAG = "ListEventViewModel"
