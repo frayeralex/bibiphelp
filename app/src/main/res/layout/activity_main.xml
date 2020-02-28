@@ -62,6 +62,8 @@
             android:layout_height="wrap_content"
             android:maxHeight="40sp"
             android:layout_marginBottom="20dp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="" />
 
         <Button
@@ -70,13 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/main_help_btn" />
-
-        <Button
-            android:id="@+id/closeBtn"
-            style="@style/PrimaryBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/main_hide_btn" />
     </LinearLayout>
 
     <Button

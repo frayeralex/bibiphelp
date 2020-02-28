@@ -46,9 +46,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
 
-        if (currentUser == null) {
+        if (auth.currentUser == null) {
             auth.signInAnonymously()
                 .addOnCompleteListener(this) { task ->
 
@@ -95,7 +94,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
-        events?.forEach { updateEventMarkers(it) }
+        events?.filter { event -> event.userId != auth.currentUser?.uid }
+            ?.forEach { updateEventMarkers(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
