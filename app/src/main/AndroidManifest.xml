@@ -36,8 +36,12 @@
             android:parentActivityName=".activities.MainActivity"
             android:label="@string/label_categories"/>
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".activities.HelpFormActivity"
             android:parentActivityName=".activities.CategoriesActivity"/>
+        <activity
+            android:name=".activities.WaitHelpActivity"
+            android:parentActivityName=".activities.HelpFormActivity"/>
         <activity
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
