@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.graphics.Color
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,6 +34,17 @@ class CategoriesActivity : AppCompatActivity() {
             .observe(this, Observer<MutableList<EventCategoryModel>> { handleCategoryUpdated(it) })
 
         categoryList = findViewById(R.id.category_list)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        android.R.id.home -> {
+            super.onBackPressed()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun handleCategoryUpdated(categories: MutableList<EventCategoryModel>?) {
@@ -108,7 +120,6 @@ class CategoriesActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val TAG = "CATEGORIES_ACTIVITY"
         const val CATEGORY_ID_KEY = "CATEGORY_ID_KEY"
     }
 }
