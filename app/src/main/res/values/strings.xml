@@ -10,7 +10,14 @@
 
     <!--Help Form-->
     <string name="help_input_label">Опишіть проблему</string>
-    <string name="help_input_label_empty">Опис проблеми э обовязковим</string>
+    <string name="help_input_label_empty">Поле обвязкове</string>
+    <string name="help_input_large_text">Дуже довге повідомлення</string>
+
+    <!--WaitHelpActivity-->
+    <string name="wait_help_main_label">Ваша заявка отримана\nочікуйте на допомогу</string>
+    <string name="wait_help_secondary_label">Очікуйте на допомогу або скасуйте заявку</string>
+    <string name="wait_help_card_label">Відгукнулося</string>
+    <string name="wait_help_reject_btn_label">СКАСУВАТИ</string>
 
     <!--OnBoarding-->
     <string name="onBoarding_title_1">Світ добрих людей</string>
