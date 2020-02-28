@@ -2,59 +2,51 @@ package com.github.frayeralex.bibiphelp.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventCategoryModelUtils
-import com.google.firebase.database.*
+import com.github.frayeralex.bibiphelp.viewModels.CategoriesViewModel
+
 
 class CategoriesActivity : AppCompatActivity() {
 
-    private lateinit var categoriesRef: DatabaseReference
     private lateinit var categoryList: LinearLayout
+    private val viewModel by viewModels<CategoriesViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
+
         setSupportActionBar(findViewById(R.id.toolbar_1))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        viewModel.getCategories()
+            .observe(this, Observer<MutableList<EventCategoryModel>> { handleCategoryUpdated(it) })
+
         categoryList = findViewById(R.id.category_list)
-
-        categoriesRef = FirebaseDatabase.getInstance().getReference(DB_CATEGORIES)
-
-        categoriesRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                handleEventChanged(dataSnapshot)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                handleEventChangeError(error)
-            }
-        })
     }
 
-    private fun handleEventChanged(dataSnapshot: DataSnapshot) {
-        for (eventSnapshot in dataSnapshot.children) {
-            val category = eventSnapshot.getValue(EventCategoryModel::class.java)
+    private fun handleCategoryUpdated(categories: MutableList<EventCategoryModel>?) {
+        categoryList.removeAllViews()
 
-            if (category != null) {
-                val listItem = createCategoryItem(category)
+        categories?.forEach {
+            val listItem = createCategoryItem(it)
 
-                listItem.addView(createCategoryImage(category))
-                listItem.addView(createCategoryLabel(category))
+            listItem.addView(createCategoryImage(it))
+            listItem.addView(createCategoryLabel(it))
 
-                listItem.setOnClickListener { handleItemClick(it) }
+            listItem.setOnClickListener { view -> handleItemClick(view) }
 
-                categoryList.addView(listItem)
-            }
+            categoryList.addView(listItem)
         }
     }
 
@@ -115,13 +107,8 @@ class CategoriesActivity : AppCompatActivity() {
         return img
     }
 
-    private fun handleEventChangeError(error: DatabaseError) {
-        Log.d(TAG, "Failed to read categories values.", error.toException())
-    }
-
     companion object {
         const val TAG = "CATEGORIES_ACTIVITY"
-        const val DB_CATEGORIES = "categories"
         const val CATEGORY_ID_KEY = "CATEGORY_ID_KEY"
     }
 }
