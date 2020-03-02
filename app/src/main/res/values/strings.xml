@@ -4,6 +4,12 @@
 
     <!--Labels-->
     <string name="label_categories">Оберіть категорії</string>
+    <string name="label_close_event">Вирішили проблему?</string>
+
+    <!--Options-->
+    <string name="close_option_success">Допомога отримана</string>
+    <string name="close_option_self">Вирішив проблему сам</string>
+    <string name="close_option_non_actual">Неактуально</string>
 
     <!--Buttons-->
     <string name="btn_publish">Опублікувати</string>

@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/message"
+            android:id="@+id/messageInput"
             android:layout_width="0dp"
             android:layout_height="41dp"
             android:layout_marginStart="16dp"

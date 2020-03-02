@@ -1,5 +1,6 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +15,7 @@ import kotlinx.android.synthetic.main.activity_wait_help.*
 class WaitHelpActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<WaitHelpViewModel>()
-    private var counter = 0
     private lateinit var eventId : String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +34,9 @@ class WaitHelpActivity : AppCompatActivity() {
     }
 
     private fun handleCloseBtnClick() {
-        // todo implement navigate to CloseEvent Activity
-        counter += 1
-        helpersCount.text = counter.toString()
+        val intent = Intent(this, CloseEventActivity::class.java)
+        intent.putExtra(EVENT_ID, eventId)
+        startActivity(intent)
     }
 
     private fun updateUI(event: EventModel) {
@@ -52,5 +51,9 @@ class WaitHelpActivity : AppCompatActivity() {
             waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label_success)
             waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_coming))
         }
+    }
+
+    companion object {
+        const val EVENT_ID = "EVENT_ID"
     }
 }

@@ -28,7 +28,7 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
         if (events.value === null) {
             eventsStatus.value = RequestStatuses.PENDING
 
-            FBRefs.eventsRef.addValueEventListener(object : ValueEventListener {
+            FBRefs.activeEventsRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val eventsList = mutableListOf<EventModel>()
 
