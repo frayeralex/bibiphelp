@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_list_view"
-        android:icon="@drawable/list_icon"
+        android:icon="@drawable/icon_list"
         android:title="@string/toolbar_list_action"
         android:visible="true"
         android:enabled="true"
