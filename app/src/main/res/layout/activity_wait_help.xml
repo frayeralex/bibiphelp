@@ -44,13 +44,13 @@
         app:layout_constraintTop_toBottomOf="@+id/waitMainTitle" />
 
     <Button
-        android:id="@+id/rejectBtn"
+        android:id="@+id/closeEventBtn"
         style="@style/PrimaryBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/wait_help_reject_btn_label"
+        android:text="@string/wait_help_close_btn_label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/rejectBtn"
+        app:layout_constraintBottom_toTopOf="@+id/closeEventBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waitSecondaryTitle">
@@ -79,7 +79,7 @@
             android:paddingTop="24dp"
             android:paddingEnd="8dp"
             android:paddingBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/rejectBtn"
+            app:layout_constraintBottom_toTopOf="@+id/closeEventBtn"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent">
