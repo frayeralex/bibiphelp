@@ -15,11 +15,11 @@ import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventCategoryModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.CategoriesViewModel
+import kotlinx.android.synthetic.main.activity_categories.*
 
 
 class CategoriesActivity : AppCompatActivity() {
 
-    private lateinit var categoryList: LinearLayout
     private val viewModel by viewModels<CategoriesViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +31,6 @@ class CategoriesActivity : AppCompatActivity() {
 
         viewModel.getCategories()
             .observe(this, Observer<MutableList<EventCategoryModel>> { handleCategoryUpdated(it) })
-
-        categoryList = findViewById(R.id.category_list)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

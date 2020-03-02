@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
+        markerMap.forEach{ it.value.remove() }
+        markerMap.clear()
+
         events?.filter { event -> event.userId != user?.uid }
             ?.forEach { updateEventMarkers(it) }
     }
@@ -199,29 +202,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun updateEventMarkers(event: EventModel?) {
         if (event is EventModel && event.id != "") {
-            val marker = markerMap[event.id]
-
-            if (marker is Marker) {
-                marker.title = event.message
-                marker.position = LatLng(event.lat!!, event.long!!)
-
-                reDrawMarker(marker)
-            } else {
-                val newMarker = mMap.addMarker(EventModelUtils.getMapMarker(event))
-                newMarker.tag = event.id
-                markerMap.put(event.id!!, newMarker)
-            }
-        }
-    }
-
-    private fun reDrawMarker(marker: Marker) {
-        val isInfoWindowShown = marker.isInfoWindowShown
-
-        marker.isVisible = false
-        marker.isVisible = true
-
-        if (isInfoWindowShown) {
-            marker.showInfoWindow()
+            val newMarker = mMap.addMarker(EventModelUtils.getMapMarker(event))
+            newMarker.tag = event.id
+            markerMap.put(event.id!!, newMarker)
         }
     }
 
