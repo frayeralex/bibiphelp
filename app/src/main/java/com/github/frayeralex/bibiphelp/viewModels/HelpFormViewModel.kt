@@ -56,6 +56,4 @@ class HelpFormViewModel(application: Application) : AndroidViewModel(application
         }
         action.addOnCanceledListener { isRequesting.value = false }
     }
-
-
 }

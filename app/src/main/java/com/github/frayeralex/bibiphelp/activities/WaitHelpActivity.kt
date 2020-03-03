@@ -1,17 +1,22 @@
 package com.github.frayeralex.bibiphelp.activities
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.models.EventModel
+import com.github.frayeralex.bibiphelp.viewModels.WaitHelpViewModel
+import kotlinx.android.synthetic.main.activity_wait_help.*
+
 
 class WaitHelpActivity : AppCompatActivity() {
 
+    private val viewModel by viewModels<WaitHelpViewModel>()
     private var counter = 0
     private lateinit var eventId : String
-    private lateinit var helpersCount : TextView
-    private lateinit var rejectBtn : Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,18 +25,32 @@ class WaitHelpActivity : AppCompatActivity() {
 
         eventId = intent.getStringExtra(HelpFormActivity.EVENT_ID)!!
 
-        helpersCount = findViewById(R.id.helpersCount)
+        closeEventBtn.setOnClickListener{ handleCloseBtnClick() }
 
-        rejectBtn = findViewById(R.id.rejectBtn)
-
-        rejectBtn.setOnClickListener{ handleRejectBtnClick() }
-
-        //todo Implement logic to show count of helpers
+        viewModel.getEvent(eventId).observe(this, Observer {
+            if (it != null) {
+                updateUI(it)
+            }
+        })
     }
 
-    private fun handleRejectBtnClick() {
-        // todo implement go to Rejection Reason Confirmation Activity
+    private fun handleCloseBtnClick() {
+        // todo implement navigate to CloseEvent Activity
         counter += 1
         helpersCount.text = counter.toString()
+    }
+
+    private fun updateUI(event: EventModel) {
+        helpersCount.text = event.helpers.size.toString()
+
+        if (event.helpers.isEmpty()) {
+            waitMainTitle.text = resources.getText(R.string.wait_help_main_label)
+            waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label)
+            waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_request_placeholder))
+        } else {
+            waitMainTitle.text = resources.getText(R.string.wait_help_main_label_success)
+            waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label_success)
+            waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_coming))
+        }
     }
 }

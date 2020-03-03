@@ -11,5 +11,6 @@ data class EventModel(
     var createdAt: Long? = 0,
     var userId: String? = "",
     var lat: Double? = 0.0,
-    var long: Double? = 0.0
+    var long: Double? = 0.0,
+    val helpers: MutableMap<String, Boolean> = HashMap()
 )
