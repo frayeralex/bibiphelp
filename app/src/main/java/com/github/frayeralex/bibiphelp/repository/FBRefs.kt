@@ -4,6 +4,11 @@ import com.github.frayeralex.bibiphelp.constatns.Collections
 import com.google.firebase.database.FirebaseDatabase
 
 object FBRefs {
-    val categoriesRef = FirebaseDatabase.getInstance().getReference(Collections.CATEGORIES)
-    val eventsRef = FirebaseDatabase.getInstance().getReference(Collections.EVENTS)
+    private val db = FirebaseDatabase.getInstance()
+
+    val categoriesRef = db.getReference(Collections.CATEGORIES)
+
+    val eventsRef = db.getReference(Collections.EVENTS)
+
+    val activeEventsRef = eventsRef.orderByChild("status").equalTo(0.toDouble())
 }

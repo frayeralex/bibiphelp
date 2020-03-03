@@ -7,7 +7,6 @@ import android.location.Location
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MenuItem
 import android.widget.*
 import androidx.activity.viewModels
@@ -18,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
 import com.github.frayeralex.bibiphelp.constatns.InputValidation
 import com.github.frayeralex.bibiphelp.viewModels.HelpFormViewModel
+import kotlinx.android.synthetic.main.activity_help_form.*
 
 
 class HelpFormActivity : AppCompatActivity() {
@@ -29,12 +29,6 @@ class HelpFormActivity : AppCompatActivity() {
     private var isRequesting = false
     private var location: Location? = null
 
-    private lateinit var validationText: TextView
-    private lateinit var textCount: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var button: Button
-    private lateinit var messageInput: EditText
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,21 +37,13 @@ class HelpFormActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_help_form)
 
-        setSupportActionBar(findViewById(R.id.toolbar_help))
+        setSupportActionBar(toolbarHelp)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = categoryLabel
 
-        progressBar = findViewById(R.id.progressBar)
-
-        validationText = findViewById(R.id.validationText)
-
-        textCount = findViewById(R.id.textCount)
         textCount.text = "0 / ${InputValidation.helpMsgMaxLength}"
 
-        button = findViewById(R.id.helpRequestButton)
-        button.setOnClickListener { handlePublishBtnClick() }
-
-        messageInput = findViewById(R.id.message)
+        helpRequestButton.setOnClickListener { handlePublishBtnClick() }
 
         messageInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(cs: Editable) {}

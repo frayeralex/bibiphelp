@@ -2,11 +2,9 @@ package com.github.frayeralex.bibiphelp.list_users
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -126,7 +124,7 @@ class FragmentList : Fragment() {
             if (dataEvent != null) {
                 mdataEvent = dataEvent
             }
-            view.message.text = "${mdataEvent.message}"
+            view.messageInput.text = "${mdataEvent.message}"
             view.type.text = getString(getType(mdataEvent))
             view.frame_item_event.setBackgroundColor(resources.getColor(getTypeColor(mdataEvent)))
         }

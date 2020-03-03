@@ -43,6 +43,10 @@
             android:name=".activities.WaitHelpActivity"
             android:parentActivityName=".activities.HelpFormActivity"/>
         <activity
+            android:label="@string/label_close_event"
+            android:name=".activities.CloseEventActivity"
+            android:parentActivityName=".activities.WaitHelpActivity"/>
+        <activity
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".list_users.ActivityList"/>

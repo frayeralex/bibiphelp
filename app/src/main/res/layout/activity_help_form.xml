@@ -8,7 +8,7 @@
     tools:context=".activities.HelpFormActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_help"
+        android:id="@+id/toolbarHelp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -28,10 +28,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/message"
+        app:layout_constraintBottom_toTopOf="@+id/messageInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_help"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHelp"
         app:srcCompat="@drawable/help_request_placeholder" />
 
     <TextView
@@ -41,23 +41,23 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="0dp"
         android:text="@string/help_input_label"
-        app:layout_constraintBottom_toTopOf="@+id/message"
+        app:layout_constraintBottom_toTopOf="@+id/messageInput"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/validationText"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/help_input_label_empty"
         android:textColor="@color/colorAccent"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/helpRequestButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message" />
+        app:layout_constraintTop_toBottomOf="@+id/messageInput" />
 
     <EditText
-        android:id="@+id/message"
+        android:id="@+id/messageInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
