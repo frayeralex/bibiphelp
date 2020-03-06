@@ -29,10 +29,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
+import com.github.frayeralex.bibiphelp.App
 import com.google.firebase.auth.FirebaseUser
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnCameraIdleListener {
 
+    private val app by lazy { application as App }
     private val viewModel by viewModels<ListEventViewModel>()
     private lateinit var mMap: GoogleMap
     private var user: FirebaseUser? = null
@@ -161,6 +164,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    private fun updateCamera() {
+        try {
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLng(
+                    LatLng(
+                        app.getCacheManager().lastMapLat.toDouble(),
+                        app.getCacheManager().lastMapLong.toDouble()
+                    )
+                )
+            )
+        } catch (e: NotFoundException) {
+        }
+    }
+
     private fun updateMyLocationMarker(location: Location?) {
         if (location != null) {
             if (myLocationMarker == null) {
@@ -170,18 +187,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .anchor((0.5).toFloat(), (0.5).toFloat())
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
                 )
-
-                try {
-                    mMap.moveCamera(
-                        CameraUpdateFactory.newLatLng(
-                            LatLng(
-                                location.latitude,
-                                location.longitude
-                            )
-                        )
-                    )
-                } catch (e: NotFoundException) {
-                }
             }
         }
     }
@@ -189,9 +194,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isMapToolbarEnabled = false
+
         mMap.setOnMarkerClickListener(this)
+        mMap.setOnCameraIdleListener(this)
 
         updateMapStyle()
+        updateCamera()
         checkLocationPermission()
 
         viewModel.getEvents()
@@ -207,6 +215,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             newMarker.tag = event.id
             markerMap.put(event.id!!, newMarker)
         }
+    }
+
+    override fun onCameraIdle() {
+        persistMapPosition()
+    }
+
+    private fun persistMapPosition() {
+        app.getCacheManager().lastMapLat = mMap.cameraPosition.target.latitude.toFloat()
+        app.getCacheManager().lastMapLong = mMap.cameraPosition.target.longitude.toFloat()
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
