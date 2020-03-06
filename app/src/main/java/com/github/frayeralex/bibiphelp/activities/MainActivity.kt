@@ -8,9 +8,6 @@ import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -30,7 +27,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
+import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     GoogleMap.OnCameraIdleListener {
@@ -40,8 +39,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mMap: GoogleMap
     private var user: FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var bottomBar: LinearLayout
-    private lateinit var askHelpBtn: Button
 
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
@@ -60,10 +57,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        askHelpBtn = findViewById(R.id.button_help)
         askHelpBtn.setOnClickListener { handleAskHelpBtnClick(it) }
 
-        bottomBar = findViewById(R.id.bottomBar)
         bottomBar.setOnClickListener { handleCloseBtnClick(it) }
 
         bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
@@ -180,14 +175,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun updateMyLocationMarker(location: Location?) {
         if (location != null) {
-            if (myLocationMarker == null) {
-                myLocationMarker = mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(location.latitude, location.longitude))
-                        .anchor((0.5).toFloat(), (0.5).toFloat())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
-                )
+            if (myLocationMarker != null) {
+                myLocationMarker?.remove()
+                myLocationMarker = null
             }
+
+            myLocationMarker = mMap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .anchor((0.5).toFloat(), (0.5).toFloat())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
+            )
         }
     }
 
@@ -230,8 +228,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val eventId = marker?.tag as String?
 
         if (eventId != null) {
-            val label = findViewById<TextView>(R.id.bottomTypeLabel)
-            label.text = marker!!.title
+            bottomTypeLabel.text = marker!!.title
+            if (myLocationMarker != null) {
+                val distance = DistanceCalculator.distance(
+                    marker.position.latitude,
+                    marker.position.longitude,
+                    myLocationMarker?.position?.latitude!!,
+                    myLocationMarker?.position?.longitude!!,
+                    "K"
+                )
+                distanceLabel.text = resources.getString(R.string.distance_km, DistanceCalculator.formatDistance(distance))
+            }
 
             if (bottomBar.translationY != 0f) {
                 fadeIn(bottomBar)
