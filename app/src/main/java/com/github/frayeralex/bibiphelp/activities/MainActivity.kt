@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private val viewModel by viewModels<ListEventViewModel>()
     private lateinit var mMap: GoogleMap
-    private var user : FirebaseUser? = null
+    private var user: FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var bottomBar: LinearLayout
     private lateinit var askHelpBtn: Button
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
-        markerMap.forEach{ it.value.remove() }
+        markerMap.forEach { it.value.remove() }
         markerMap.clear()
 
         events?.filter { event -> event.userId != user?.uid }
@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
+
             } else {
                 ActivityCompat.requestPermissions(
                     this,

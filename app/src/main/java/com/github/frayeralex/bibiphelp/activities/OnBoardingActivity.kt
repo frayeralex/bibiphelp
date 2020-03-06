@@ -4,21 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.adapters.OnboardingSliderAdapter
 import com.github.frayeralex.bibiphelp.R
-import com.github.frayeralex.bibiphelp.list_users.ActivityList
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 
 
 class OnBoardingActivity : AppCompatActivity() {
 
+    private val app by lazy { application as App }
     private lateinit var slideAdapter: OnboardingSliderAdapter
     private lateinit var viewPager: ViewPager
     private lateinit var sliderDots: LinearLayout
@@ -56,6 +56,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun clickHandler() {
+        app.getCache().isOnBoarded = true
         startActivity(Intent(this, MainActivity::class.java))
 
         finish()
