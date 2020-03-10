@@ -56,7 +56,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun clickHandler() {
-        app.getCache().isOnBoarded = true
+        app.getCacheManager().isOnBoarded = true
         startActivity(Intent(this, MainActivity::class.java))
 
         finish()

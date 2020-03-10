@@ -24,6 +24,10 @@ class SPManager(context: App) : BaseSharedPreferencesManager(context, file) {
             saveString(ACTIVE_HELP_REQUEST, value)
         }
 
+    fun resetActivityHelp() {
+        saveString(ACTIVE_HELP_REQUEST, DEFAULT_STRING)
+    }
+
     companion object {
         const val file = "main"
         const val LAST_MAP_LAT = "LAST_MAP_LAT"

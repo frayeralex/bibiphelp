@@ -7,5 +7,5 @@ class App : Application() {
 
     private var cache: SPManager? = null
 
-    fun getCache() = cache ?: SPManager(this)
+    fun getCacheManager() = cache ?: SPManager(this)
 }
