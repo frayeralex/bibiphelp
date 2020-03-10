@@ -5,6 +5,7 @@
     <!--Labels-->
     <string name="label_categories">Оберіть категорії</string>
     <string name="label_close_event">Вирішили проблему?</string>
+    <string name="distance_km">~%1$s км</string>
 
     <!--Options-->
     <string name="close_option_success">Допомога отримана</string>

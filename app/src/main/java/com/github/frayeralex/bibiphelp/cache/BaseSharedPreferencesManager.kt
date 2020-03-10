@@ -26,11 +26,10 @@ abstract class BaseSharedPreferencesManager(context: App, preferences: String) {
         sharedPreferences.edit().putFloat(key, value).apply()
     }
 
-    fun getFloat(key: String, def: Float = DEFAULT_FLOAT) = sharedPreferences.getFloat(key, def)
+    fun getFloat(key: String, def: Float = 0f) = sharedPreferences.getFloat(key, def)
 
     companion object {
         const val DEFAULT_STRING = ""
         const val DEFAULT_BOOL = false
-        const val DEFAULT_FLOAT = 0f
     }
 }

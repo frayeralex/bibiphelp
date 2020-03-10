@@ -1,5 +1,8 @@
 package com.github.frayeralex.bibiphelp.utils
 
+import java.math.RoundingMode
+import java.text.DecimalFormat
+
 object DistanceCalculator {
     @JvmStatic
     fun distance(
@@ -31,5 +34,12 @@ object DistanceCalculator {
             }
             dist
         }
+    }
+
+    @JvmStatic
+    fun formatDistance(value: Double): String {
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.CEILING
+        return df.format(value)
     }
 }
