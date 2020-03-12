@@ -1,16 +1,16 @@
 package com.github.frayeralex.bibiphelp.utils
 
-import java.math.RoundingMode
 import java.text.DecimalFormat
 
+const val KILOMETERS = "K"
+
 object DistanceCalculator {
-    @JvmStatic
     fun distance(
         lat1: Double,
         lon1: Double,
         lat2: Double,
         lon2: Double,
-        unit: String
+        unit: String = KILOMETERS
     ): Double {
         return if (lat1 == lat2 && lon1 == lon2) {
            0.toDouble()
@@ -27,19 +27,15 @@ object DistanceCalculator {
             dist = Math.acos(dist)
             dist = Math.toDegrees(dist)
             dist *= 60 * 1.1515
-            if (unit == "K") {
+            if (unit == KILOMETERS) {
                 dist *= 1.609344
-            } else if (unit == "N") {
-                dist *= 0.8684
             }
             dist
         }
     }
 
-    @JvmStatic
     fun formatDistance(value: Double): String {
         val df = DecimalFormat("#.##")
-        df.roundingMode = RoundingMode.CEILING
         return df.format(value)
     }
 }
