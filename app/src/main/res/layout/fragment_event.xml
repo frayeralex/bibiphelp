@@ -86,7 +86,7 @@
         </LinearLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/bottomBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"

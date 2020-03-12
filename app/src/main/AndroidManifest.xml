@@ -32,28 +32,40 @@
 
         <activity
             android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance" />
+
+        <activity
+            android:name=".activities.EventDetails"
+            android:label="@string/label_details_event"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity" />
 
         <activity
             android:name=".activities.CategoriesActivity"
             android:label="@string/label_categories"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.HelpFormActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.CategoriesActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.WaitHelpActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.HelpFormActivity" />
         <activity
             android:name=".activities.CloseEventActivity"
             android:label="@string/label_close_event"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.WaitHelpActivity" />
         <activity
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".list_users.ActivityList"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance" />
         <activity android:name=".list_users.ActivityUserPager" />
     </application>
