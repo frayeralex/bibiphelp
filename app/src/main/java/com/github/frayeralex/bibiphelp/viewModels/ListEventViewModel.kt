@@ -25,6 +25,7 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
     private val eventsStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
 
     fun getEvents(): LiveData<MutableList<EventModel>> {
+        Log.d ("ma1", "${events.value}")
         if (events.value === null) {
             eventsStatus.value = RequestStatuses.PENDING
 

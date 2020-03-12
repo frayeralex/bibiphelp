@@ -5,17 +5,32 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.activities.MainActivity
+import com.github.frayeralex.bibiphelp.models.EventModel
+import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
+import com.google.firebase.auth.FirebaseUser
 
 abstract class ActivityUserAbstract : AppCompatActivity() {
 
+
     abstract fun createFragment(): Fragment
 
+
+
+
+
+
     val mFragmentManager = supportFragmentManager
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +59,8 @@ abstract class ActivityUserAbstract : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
     }
+
 
 }

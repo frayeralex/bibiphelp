@@ -16,24 +16,25 @@ object SingltonUser {
     const val DB_EVENTS = "events"
     private var eventsRef: DatabaseReference =
         FirebaseDatabase.getInstance().getReference(DB_EVENTS)
-    val mlistEvents: ArrayList<EventModel?> = ArrayList()
 
-    init {
-        eventsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (eventSnapshot in dataSnapshot.children) {
-                    val event = eventSnapshot.getValue(EventModel::class.java)
-                    mlistEvents.add(event)
-                }
-            }
+    var mlistEvents: MutableList<EventModel> = ArrayList()
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(MainActivity.TAG, "Failed to read value.", error.toException())
-            }
-        })
-    }
+//    init {
+//        eventsRef.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                for (eventSnapshot in dataSnapshot.children) {
+//                    val event = eventSnapshot.getValue(EventModel::class.java)
+//                    mlistEvents.add(event)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.w(MainActivity.TAG, "Failed to read value.", error.toException())
+//            }
+//        })
+//    }
 
-    fun getListEvent(): ArrayList<EventModel?> {
+    fun getListEvent(): MutableList<EventModel> {
         return mlistEvents
     }
 

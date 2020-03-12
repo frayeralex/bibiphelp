@@ -1,32 +1,96 @@
 package com.github.frayeralex.bibiphelp.list_users
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.activities.MainActivity
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser.getListEvent
 import com.github.frayeralex.bibiphelp.models.EventModel
+import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
+import com.google.android.gms.maps.GoogleMap
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.item_events.view.*
+import kotlinx.android.synthetic.main.item_event.view.*
 
 
 class FragmentList : Fragment() {
 
-    val mUserAdapter: UserAdapter = UserAdapter(getListEvent())
+    private val viewModel by viewModels <ListEventViewModel>()
+    //private lateinit var ownViewModel: ListEventViewModel
+
+
+
+    lateinit var mUserAdapter: UserAdapter
     lateinit var myRecyclerView: RecyclerView
+    lateinit var mEvents: MutableList<EventModel>
+    private var user : FirebaseUser? = null
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+        //ownViewModel = ViewModelProviders.of(this).get(ListEventViewModel::class.java)
+//        Log.d ("frag1", "${viewModel.getEvents().value}")
+//        mEvents = viewModel.getEvents().value
+
+//        Log.d ("frag1", "11111")
+//
+//
+//    }
+
+
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
+       // Log.d("mat999", "${user.toString()}")
+
+
         setHasOptionsMenu(true)
     }
+
+
+
+    private fun handleEventsUpdated(events: MutableList<EventModel>?) {
+
+//        Log.d("mat999", "${events.toString()}")
+//
+//        Log.d("mat999", "${events!![0].toString()}")
+        //mEvents = events
+    }
+
+
+//    override fun onMapReady(googleMap: GoogleMap) {
+//
+//
+//
+//        Log.d ("mat3333", "${viewModel.getEvents().value.toString()}")
+//
+//
+
+//        viewModel.getLocationData()
+//            .observe(this, Observer<Location> { updateMyLocationMarker(it) })
+//    }
+
+
 
 
     override fun onCreateView(
@@ -38,6 +102,19 @@ class FragmentList : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_list, container, false)
         val toolbar: androidx.appcompat.widget.Toolbar = view.findViewById(R.id.list_toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
+
+
+
+
+
+        viewModel.getEvents()
+            .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
+
+        Log.d ("fr333", "${handleEventsUpdated(viewModel.getEvents().value)}")
+
+       // Log.d ("fr333", "${mEvents.toString()}")
+
+        mUserAdapter = UserAdapter(SingltonUser.mlistEvents)
 
         myRecyclerView = view.myRecyclerView
         myRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -53,10 +130,7 @@ class FragmentList : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateUI()
-    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -89,22 +163,23 @@ class FragmentList : Fragment() {
     }
 
 
-    inner class UserAdapter(val dataEvents: ArrayList<EventModel?>) :
+    inner class UserAdapter(val events: MutableList<EventModel>?) :
         RecyclerView.Adapter<UserHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            return UserHolder(layoutInflater.inflate(R.layout.item_events, parent, false))
+            return UserHolder(layoutInflater.inflate(R.layout.item_event, parent, false))
 
         }
 
         override fun getItemCount(): Int {
-            return dataEvents.size
+            Log.d ("getItem", "${events.toString()}")
+            return events!!.size
         }
 
         override fun onBindViewHolder(holder: UserHolder, position: Int) {
 
-            val dataEvent = dataEvents[position]
+            val dataEvent = events!![position]
             holder.bind(dataEvent)
             //var viev: View = holder.itemView
         }
@@ -121,12 +196,18 @@ class FragmentList : Fragment() {
         lateinit var mdataEvent: EventModel
 
         fun bind(dataEvent: EventModel?) {
-            if (dataEvent != null) {
+             if (dataEvent != null) {
                 mdataEvent = dataEvent
             }
             view.messageInput.text = "${mdataEvent.message}"
             view.type.text = getString(getType(mdataEvent))
-            view.frame_item_event.setBackgroundColor(resources.getColor(getTypeColor(mdataEvent)))
+
+
+            val myBorder = view.frame_item_event.getBackground() as GradientDrawable
+            myBorder.setColor(resources.getColor(getTypeColor(mdataEvent)))
+
+
+           // view.setBackgroundColor(resources.getColor(getTypeColor(mdataEvent)))
         }
 
         override fun onClick(v: View?) {

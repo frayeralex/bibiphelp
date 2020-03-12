@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -29,11 +30,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
+import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private val viewModel by viewModels<ListEventViewModel>()
+    private val viewModel by viewModels <ListEventViewModel>()
+
     private lateinit var mMap: GoogleMap
     private var user : FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -42,6 +45,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
@@ -52,10 +57,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
+        Log.d ("mat1111", "${viewModel.getEvents().value.toString()}, 1")
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        Log.d ("mat3333", "onCreate")
 
         askHelpBtn = findViewById(R.id.button_help)
         askHelpBtn.setOnClickListener { handleAskHelpBtnClick(it) }
@@ -67,15 +73,54 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
+        Log.d ("mat1111", "${user.toString()}")
+
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
-        markerMap.forEach{ it.value.remove() }
-        markerMap.clear()
 
-        events?.filter { event -> event.userId != user?.uid }
-            ?.forEach { updateEventMarkers(it) }
+        Log.d ("mat3333", "${events!!.size.toString()}")
+
+        Log.d ("mat3333", "${events!![0].toString()}")
+
+        SingltonUser.mlistEvents = events
+
+
+        markerMap.forEach { it.value.remove() }
+        markerMap.clear()
+        Log.d ("mat3333", "${events!!.size.toString()}")
+
+         for (i in 0..events.size-1) {
+
+            Log.d("mat555", "${events[i]}")
+        }
+
+
+
+
+
+        events?.filter { event -> event.userId != user?.uid }?.forEach { updateEventMarkers(it) }
     }
+
+
+    fun test (events: MutableList<EventModel>?) {
+        Log.d ("mat4448", "${events!!.size.toString()}")
+
+
+
+        val eventsTest: MutableList<EventModel>? = events
+
+        Log.d ("mat4444", "${eventsTest!![0].toString()}")
+
+
+     }
+
+
+
+
+
+
+
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
@@ -190,11 +235,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.uiSettings.isMapToolbarEnabled = false
         mMap.setOnMarkerClickListener(this)
 
+        Log.d ("mat3333", "onMap")
+
         updateMapStyle()
         checkLocationPermission()
 
         viewModel.getEvents()
             .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
+
+        Log.d ("mat3333", "${viewModel.getEvents().value.toString()}, map")
+
+
+
+
+        viewModel.getEvents()
+            .observe(this, Observer<MutableList<EventModel>> { test(it) })
+
 
         viewModel.getLocationData()
             .observe(this, Observer<Location> { updateMyLocationMarker(it) })
@@ -239,5 +295,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         const val TAG = "MAIN_ACTIVITY"
         const val ACCESS_FINE_LOCATION = 1
         const val DEFAULT_ANIMATION_DURATION = 300
+
     }
 }
