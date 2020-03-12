@@ -67,13 +67,13 @@
             android:maxHeight="40sp"
             android:maxLines="2"
             android:text=""
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/bottomBtn"
             app:layout_constraintEnd_toStartOf="@+id/imgIconCar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/bottomBtn"
             style="@style/PrimaryBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

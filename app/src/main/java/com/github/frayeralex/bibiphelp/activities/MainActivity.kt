@@ -27,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
+import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var user: FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private var selectedEventId: String? = null
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
 
@@ -65,6 +67,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
+
+        bottomBtn.setOnClickListener { handleHelpBtnClick() }
+    }
+
+    private fun handleHelpBtnClick() {
+        if (selectedEventId != null) {
+            val intent = Intent(this, EventDetails::class.java)
+            intent.putExtra(IntentExtra.eventId, selectedEventId)
+            startActivity(intent)
+        }
+
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
@@ -225,19 +238,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
-        val eventId = marker?.tag as String?
+        selectedEventId = marker?.tag as String?
 
-        if (eventId != null) {
+        if (selectedEventId != null) {
             bottomTypeLabel.text = marker!!.title
             if (myLocationMarker != null) {
                 val distance = DistanceCalculator.distance(
                     marker.position.latitude,
                     marker.position.longitude,
                     myLocationMarker?.position?.latitude!!,
-                    myLocationMarker?.position?.longitude!!,
-                    "K"
+                    myLocationMarker?.position?.longitude!!
                 )
-                distanceLabel.text = resources.getString(R.string.distance_km, DistanceCalculator.formatDistance(distance))
+                distanceLabel.text = resources.getString(
+                    R.string.distance_km!!,
+                    DistanceCalculator.formatDistance(distance)
+                )
             }
 
             if (bottomBar.translationY != 0f) {
