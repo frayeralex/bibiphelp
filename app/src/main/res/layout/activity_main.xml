@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:mapType="normal" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,43 +39,75 @@
         android:background="@drawable/round_top"
         android:clipChildren="true"
         android:elevation="10dp"
-        android:orientation="vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/map">
+        app:layout_constraintStart_toEndOf="parent">
 
         <View
-            android:layout_width="match_parent"
+            android:id="@+id/view"
+            android:layout_width="100dp"
             android:layout_height="3dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginBottom="30dp"
-            android:background="#F1F1F1" />
+            android:layout_marginTop="24dp"
+            android:background="#F1F1F1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/bottomTypeLabel"
             style="@style/PrimaryText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxHeight="40sp"
-            android:layout_marginBottom="20dp"
-            android:maxLines="2"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:ellipsize="end"
-            android:text="" />
+            android:maxHeight="40sp"
+            android:maxLines="2"
+            android:text=""
+            app:layout_constraintBottom_toTopOf="@+id/bottomBtn"
+            app:layout_constraintEnd_toStartOf="@+id/imgIconCar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/bottomBtn"
             style="@style/PrimaryBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_help_btn" />
-    </LinearLayout>
+            android:text="@string/main_help_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/distanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/bottomTypeLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bottomTypeLabel" />
+
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/imgIconCar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:maxWidth="24dp"
+            android:maxHeight="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/distanceLabel"
+            app:layout_constraintEnd_toStartOf="@+id/distanceLabel"
+            app:layout_constraintTop_toTopOf="@+id/distanceLabel"
+            app:srcCompat="@drawable/icon_car" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/button_help"
+        android:id="@+id/askHelpBtn"
         style="@style/PrimaryBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

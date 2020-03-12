@@ -12,13 +12,17 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.cache.BaseSharedPreferencesManager
 import com.github.frayeralex.bibiphelp.constatns.EventStatuses
+import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.viewModels.CloseEventViewModel
 import kotlinx.android.synthetic.main.activity_close_event.*
 
 class CloseEventActivity : AppCompatActivity() {
 
+    private val app by lazy { application as App }
     private val optionsIdList = listOf(EventStatuses.SUCCESS, EventStatuses.SELF, EventStatuses.NONACTUAL)
     private val viewModel by viewModels<CloseEventViewModel>()
     private lateinit var eventId : String
@@ -31,7 +35,7 @@ class CloseEventActivity : AppCompatActivity() {
         setSupportActionBar(toolbarCloseEvent)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        eventId = intent.getStringExtra(WaitHelpActivity.EVENT_ID)!!
+        eventId = intent.getStringExtra(IntentExtra.eventId)!!
 
         showOptions()
 
@@ -48,6 +52,8 @@ class CloseEventActivity : AppCompatActivity() {
     }
 
     private fun handleSuccessCloseEvent() {
+        app.getCacheManager().resetActivityHelp()
+
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

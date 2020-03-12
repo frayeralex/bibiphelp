@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
 import com.github.frayeralex.bibiphelp.constatns.InputValidation
+import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.viewModels.HelpFormViewModel
 import kotlinx.android.synthetic.main.activity_help_form.*
 
@@ -79,9 +80,9 @@ class HelpFormActivity : AppCompatActivity() {
         viewModel.getCreatedEventId().observe(this, Observer {
             if (it != null) {
                 val intent = Intent(this, WaitHelpActivity::class.java)
-                intent.putExtra(EVENT_ID, it)
+                intent.putExtra(IntentExtra.eventId, it)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-                finish()
             }
         })
     }
@@ -139,9 +140,5 @@ class HelpFormActivity : AppCompatActivity() {
         }
 
         viewModel.createHelpRequest(message, categoryId!!, location!!)
-    }
-
-    companion object {
-        const val EVENT_ID = "EVENT_ID"
     }
 }

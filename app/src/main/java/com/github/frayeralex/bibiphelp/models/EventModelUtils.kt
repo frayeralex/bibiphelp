@@ -22,9 +22,9 @@ object EventModelUtils {
     fun getCoordinates(event: EventModel): LatLng = LatLng(event.lat!!, event.long!!)
 
     @JvmStatic
-    fun getMapMarker(event: EventModel): MarkerOptions = MarkerOptions()
+    fun getMapMarker(event: EventModel, title: String? = event.message): MarkerOptions = MarkerOptions()
         .position(getCoordinates(event))
-        .title(event.message)
+        .title(title)
         .anchor((0.5).toFloat(), (0.5).toFloat())
         .icon(getPin(event))
 }

@@ -31,18 +31,22 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.list_users.SingltonUser
+import com.github.frayeralex.bibiphelp.App
+import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnCameraIdleListener {
 
-    private val viewModel by viewModels <ListEventViewModel>()
-
+    private val app by lazy { application as App }
+    private val viewModel by viewModels<ListEventViewModel>()
     private lateinit var mMap: GoogleMap
-    private var user : FirebaseUser? = null
+    private var user: FirebaseUser? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var bottomBar: LinearLayout
-    private lateinit var askHelpBtn: Button
 
+    private var selectedEventId: String? = null
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
 
@@ -63,64 +67,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment.getMapAsync(this)
         Log.d ("mat3333", "onCreate")
 
-        askHelpBtn = findViewById(R.id.button_help)
         askHelpBtn.setOnClickListener { handleAskHelpBtnClick(it) }
 
-        bottomBar = findViewById(R.id.bottomBar)
         bottomBar.setOnClickListener { handleCloseBtnClick(it) }
 
         bottomBar.post { bottomBar.translationY = bottomBar.height.toFloat() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
-        Log.d ("mat1111", "${user.toString()}")
+
+        bottomBtn.setOnClickListener { handleHelpBtnClick() }
+    }
+
+    private fun handleHelpBtnClick() {
+        if (selectedEventId != null) {
+            val intent = Intent(this, EventDetails::class.java)
+            intent.putExtra(IntentExtra.eventId, selectedEventId)
+            startActivity(intent)
+        }
 
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
-
-        Log.d ("mat3333", "${events!!.size.toString()}")
-
-        Log.d ("mat3333", "${events!![0].toString()}")
-
-        SingltonUser.mlistEvents = events
-
-
         markerMap.forEach { it.value.remove() }
         markerMap.clear()
-        Log.d ("mat3333", "${events!!.size.toString()}")
 
-         for (i in 0..events.size-1) {
-
-            Log.d("mat555", "${events[i]}")
-        }
-
-
-
-
+        //todo replace from activity
+        SingltonUser.mlistEvents = events
 
         events?.filter { event -> event.userId != user?.uid }?.forEach { updateEventMarkers(it) }
     }
-
-
-    fun test (events: MutableList<EventModel>?) {
-        Log.d ("mat4448", "${events!!.size.toString()}")
-
-
-
-        val eventsTest: MutableList<EventModel>? = events
-
-        Log.d ("mat4444", "${eventsTest!![0].toString()}")
-
-
-     }
-
-
-
-
-
-
-
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
@@ -170,6 +146,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
+
             } else {
                 ActivityCompat.requestPermissions(
                     this,
@@ -205,52 +182,49 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    private fun updateCamera() {
+        try {
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLng(
+                    LatLng(
+                        app.getCacheManager().lastMapLat.toDouble(),
+                        app.getCacheManager().lastMapLong.toDouble()
+                    )
+                )
+            )
+        } catch (e: NotFoundException) {
+        }
+    }
+
     private fun updateMyLocationMarker(location: Location?) {
         if (location != null) {
-            if (myLocationMarker == null) {
-                myLocationMarker = mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(location.latitude, location.longitude))
-                        .anchor((0.5).toFloat(), (0.5).toFloat())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
-                )
-
-                try {
-                    mMap.moveCamera(
-                        CameraUpdateFactory.newLatLng(
-                            LatLng(
-                                location.latitude,
-                                location.longitude
-                            )
-                        )
-                    )
-                } catch (e: NotFoundException) {
-                }
+            if (myLocationMarker != null) {
+                myLocationMarker?.remove()
+                myLocationMarker = null
             }
+
+            myLocationMarker = mMap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .anchor((0.5).toFloat(), (0.5).toFloat())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
+            )
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isMapToolbarEnabled = false
-        mMap.setOnMarkerClickListener(this)
 
-        Log.d ("mat3333", "onMap")
+        mMap.setOnMarkerClickListener(this)
+        mMap.setOnCameraIdleListener(this)
 
         updateMapStyle()
+        updateCamera()
         checkLocationPermission()
 
         viewModel.getEvents()
             .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
-
-        Log.d ("mat3333", "${viewModel.getEvents().value.toString()}, map")
-
-
-
-
-        viewModel.getEvents()
-            .observe(this, Observer<MutableList<EventModel>> { test(it) })
-
 
         viewModel.getLocationData()
             .observe(this, Observer<Location> { updateMyLocationMarker(it) })
@@ -264,12 +238,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    override fun onMarkerClick(marker: Marker?): Boolean {
-        val eventId = marker?.tag as String?
+    override fun onCameraIdle() {
+        persistMapPosition()
+    }
 
-        if (eventId != null) {
-            val label = findViewById<TextView>(R.id.bottomTypeLabel)
-            label.text = marker!!.title
+    private fun persistMapPosition() {
+        app.getCacheManager().lastMapLat = mMap.cameraPosition.target.latitude.toFloat()
+        app.getCacheManager().lastMapLong = mMap.cameraPosition.target.longitude.toFloat()
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        selectedEventId = marker?.tag as String?
+
+        if (selectedEventId != null) {
+            bottomTypeLabel.text = marker!!.title
+            if (myLocationMarker != null) {
+                val distance = DistanceCalculator.distance(
+                    marker.position.latitude,
+                    marker.position.longitude,
+                    myLocationMarker?.position?.latitude!!,
+                    myLocationMarker?.position?.longitude!!
+                )
+                distanceLabel.text = resources.getString(
+                    R.string.distance_km!!,
+                    DistanceCalculator.formatDistance(distance)
+                )
+            }
 
             if (bottomBar.translationY != 0f) {
                 fadeIn(bottomBar)
@@ -295,6 +289,5 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         const val TAG = "MAIN_ACTIVITY"
         const val ACCESS_FINE_LOCATION = 1
         const val DEFAULT_ANIMATION_DURATION = 300
-
     }
 }

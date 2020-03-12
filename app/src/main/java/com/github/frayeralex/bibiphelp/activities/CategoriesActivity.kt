@@ -26,7 +26,7 @@ class CategoriesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
 
-        setSupportActionBar(findViewById(R.id.toolbar_1))
+        setSupportActionBar(toolbarDetails)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel.getCategories()
