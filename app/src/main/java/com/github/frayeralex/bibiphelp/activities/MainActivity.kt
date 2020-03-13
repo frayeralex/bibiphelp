@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         markerMap.clear()
 
         //todo replace from activity
-        SingltonUser.mlistEvents = events
+        SingltonUser.mlistEvents = events!!
 
         events?.filter { event -> event.userId != user?.uid }?.forEach { updateEventMarkers(it) }
     }
