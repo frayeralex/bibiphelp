@@ -13,7 +13,6 @@ import androidx.viewpager.widget.ViewPager
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.adapters.OnboardingSliderAdapter
 import com.github.frayeralex.bibiphelp.R
-import com.github.frayeralex.bibiphelp.list_users.SingltonUser
 
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -25,9 +24,6 @@ class OnBoardingActivity : AppCompatActivity() {
     private lateinit var finishBtn: Button
     private var currentSlide: Int = 0
 
-    init {
-        SingltonUser.mlistEvents
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

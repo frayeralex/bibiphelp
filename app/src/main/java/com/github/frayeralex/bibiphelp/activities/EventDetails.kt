@@ -11,6 +11,7 @@ import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.models.EventModelUtils
+import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.viewModels.DetailsEventViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +25,7 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
 
     private val viewModel by viewModels<DetailsEventViewModel>()
     lateinit var eventId: String
+    var mDistanse: Double = 0.0
     private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +36,12 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         eventId = intent.getStringExtra(IntentExtra.eventId)!!
+        mDistanse = intent.getDoubleExtra(IntentExtra.eventDistance, 0.0)
+
+        distance.text = resources.getString(
+            R.string.distance_km!!,
+            DistanceCalculator.formatDistance(mDistanse)
+        )
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapDetails) as SupportMapFragment

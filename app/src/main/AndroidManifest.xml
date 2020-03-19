@@ -64,10 +64,9 @@
             android:name=".activities.OnBoardingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".list_users.ActivityList"
+            android:name=".list_users.ListEvent"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance" />
-        <activity android:name=".list_users.ActivityUserPager" />
     </application>
 
 </manifest>

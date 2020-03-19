@@ -58,6 +58,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventCategoryLabel" />
 
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="16dp"
+        android:text="2 км"
+        android:textColor="@color/black"
+        android:textSize="9sp"
+        app:layout_constraintStart_toEndOf="@+id/imageCar"
+        app:layout_constraintTop_toBottomOf="@+id/eventMsg" />
+
+    <ImageView
+        android:id="@+id/imageCar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:contentDescription="TODO"
+        app:layout_constraintBottom_toBottomOf="@+id/distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/distance"
+        app:srcCompat="@drawable/icon_car" />
+
     <Button
         android:id="@+id/helpBtn"
         android:layout_width="0dp"
