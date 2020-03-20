@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +15,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.github.frayeralex.bibiphelp.list_users.ActivityList
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.models.EventModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.list_users.ListEvent
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
 
+
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
         return true
@@ -54,7 +58,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -84,13 +87,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         markerMap.forEach { it.value.remove() }
         markerMap.clear()
 
-        events?.filter { event -> event.userId != user?.uid }
-            ?.forEach { updateEventMarkers(it) }
+
+        events?.filter { event -> event.userId != user?.uid }?.forEach { updateEventMarkers(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
-            val intent = Intent(this, ActivityList::class.java)
+            val intent = Intent(this, ListEvent::class.java)
             startActivity(intent)
             true
         }
@@ -249,6 +252,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     myLocationMarker?.position?.latitude!!,
                     myLocationMarker?.position?.longitude!!
                 )
+
                 distanceLabel.text = resources.getString(
                     R.string.distance_km!!,
                     DistanceCalculator.formatDistance(distance)
