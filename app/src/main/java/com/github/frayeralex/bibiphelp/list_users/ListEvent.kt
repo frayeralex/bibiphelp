@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.Menu
 import android.view.MenuItem
@@ -12,9 +11,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.frayeralex.bibiphelp.R
@@ -25,22 +22,21 @@ import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.item_event.view.*
 import kotlinx.android.synthetic.main.list_event.*
 
 class ListEvent : AppCompatActivity() {
 
-    private val viewModel by lazy {
-        ViewModelProviders.of(this).get(ListEventViewModel::class.java)
-    }
+//    private val viewModel by lazy {
+//        ViewModelProviders.of(this).get(ListEventViewModel::class.java)
+//    }
 
+    private val viewModel by viewModels<ListEventViewModel>()
 
     val mEventAdapter = EventAdapter()
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d("menu222", "r")
         menuInflater.inflate(R.menu.toolbar_list_activity, menu)
         return true
     }
@@ -69,15 +65,12 @@ class ListEvent : AppCompatActivity() {
     override fun
             onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_map_view -> {
-            Log.d("listevent2", "list Event")
             val intent = Intent(this, MainActivity::class.java)
-            Log.d("listevent333", "list Event")
             startActivity(intent)
             true
         }
 
         else -> {
-            Log.d("listevent333", "list Event")
             super.onOptionsItemSelected(item)
         }
     }
@@ -95,7 +88,6 @@ class ListEvent : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            Log.d("eve111", "${events.size.toString()}")
             return events.size
         }
 
@@ -112,7 +104,6 @@ class ListEvent : AppCompatActivity() {
         }
 
         fun refreshDistance(mylocation: Location) {
-            Log.d("loc111", "${mylocation.toString()}")
             myLocation = mylocation
             notifyDataSetChanged()
         }
@@ -157,7 +148,6 @@ class ListEvent : AppCompatActivity() {
         }
 
         override fun onClick(v: View?) {
-            Log.d("55553", "333333")
             val intent = Intent(this@ListEvent, EventDetails::class.java)
             intent.putExtra(IntentExtra.eventId, mdataEvent.id)
             intent.putExtra(IntentExtra.eventDistance, mDistance)

@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d ("menu222", "ok")
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
         return true
     }
@@ -59,11 +58,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-        Log.d ("mat1111", "${viewModel.getEvents().value.toString()}, 1")
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        Log.d ("mat3333", "onCreate")
 
         askHelpBtn.setOnClickListener { handleAskHelpBtnClick(it) }
 
@@ -193,7 +190,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun updateMyLocationMarker(location: Location?) {
-        Log.d ("loc334", "${location.toString()}")
         if (location != null) {
             if (myLocationMarker != null) {
                 myLocationMarker?.remove()
@@ -250,7 +246,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (selectedEventId != null) {
             bottomTypeLabel.text = marker!!.title
             if (myLocationMarker != null) {
-                Log.d ("loc333", "${myLocationMarker.toString()}")
                 val distance = DistanceCalculator.distance(
                     marker.position.latitude,
                     marker.position.longitude,
