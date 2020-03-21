@@ -6,9 +6,9 @@ import org.junit.Assert.*
 class EventStatusesTest {
     @Test
     fun checkValues() {
-        assertEquals(EventStatuses.ACTIVE, 0)
-        assertEquals(EventStatuses.SUCCESS, 1)
-        assertEquals(EventStatuses.SELF, 2)
-        assertEquals(EventStatuses.NONACTUAL, 3)
+        assertEquals(0, EventStatuses.ACTIVE)
+        assertEquals(1, EventStatuses.SUCCESS)
+        assertEquals(2, EventStatuses.SELF)
+        assertEquals(3, EventStatuses.NONACTUAL)
     }
 }
