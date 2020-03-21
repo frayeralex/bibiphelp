@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
-import com.github.frayeralex.bibiphelp.models.EventCategoryModelUtils
+import com.github.frayeralex.bibiphelp.utils.EventCategoryModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.CategoriesViewModel
 import kotlinx.android.synthetic.main.activity_categories.*
 

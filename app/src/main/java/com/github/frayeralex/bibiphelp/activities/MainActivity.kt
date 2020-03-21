@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.models.EventModel
-import com.github.frayeralex.bibiphelp.models.EventModelUtils
+import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices

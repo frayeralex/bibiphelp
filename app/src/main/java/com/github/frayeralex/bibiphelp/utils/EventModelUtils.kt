@@ -1,7 +1,8 @@
-package com.github.frayeralex.bibiphelp.models
+package com.github.frayeralex.bibiphelp.utils
 
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
+import com.github.frayeralex.bibiphelp.models.EventModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -23,7 +24,11 @@ object EventModelUtils {
 
     @JvmStatic
     fun getMapMarker(event: EventModel, title: String? = event.message): MarkerOptions = MarkerOptions()
-        .position(getCoordinates(event))
+        .position(
+            getCoordinates(
+                event
+            )
+        )
         .title(title)
         .anchor((0.5).toFloat(), (0.5).toFloat())
         .icon(getPin(event))

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
-import com.github.frayeralex.bibiphelp.models.EventCategoryModelUtils
+import com.github.frayeralex.bibiphelp.utils.EventCategoryModelUtils
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel

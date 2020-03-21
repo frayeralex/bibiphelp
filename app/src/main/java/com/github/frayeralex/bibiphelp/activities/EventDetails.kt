@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventModel
-import com.github.frayeralex.bibiphelp.models.EventModelUtils
+import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.viewModels.DetailsEventViewModel
 import com.google.android.gms.maps.CameraUpdateFactory

@@ -1,7 +1,9 @@
-package com.github.frayeralex.bibiphelp.models
+package com.github.frayeralex.bibiphelp.utils
 
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
+import com.github.frayeralex.bibiphelp.models.EventCategoryModel
+import com.github.frayeralex.bibiphelp.models.EventModel
 
 object EventCategoryModelUtils {
     @JvmStatic
