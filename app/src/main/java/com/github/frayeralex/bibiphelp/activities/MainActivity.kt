@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources.NotFoundException
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
-import com.github.frayeralex.bibiphelp.list_users.ListEvent
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_list_view -> {
-            val intent = Intent(this, ListEvent::class.java)
+            val intent = Intent(this, ListEventActivity::class.java)
             startActivity(intent)
             true
         }

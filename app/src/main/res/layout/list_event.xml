@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="true"
-    tools:context=".list_users.ListEvent">
+    tools:context=".activities.ListEventActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/list_toolbar"
