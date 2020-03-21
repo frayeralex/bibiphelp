@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -139,7 +138,6 @@ class ListEventActivity : AppCompatActivity() {
             intent.putExtra(IntentExtra.eventId, mdataEvent.id)
             intent.putExtra(IntentExtra.eventDistance, mDistance)
             startActivity(intent)
-            Toast.makeText(this@ListEventActivity, "Hi!!!", Toast.LENGTH_SHORT).show()
         }
     }
 }
