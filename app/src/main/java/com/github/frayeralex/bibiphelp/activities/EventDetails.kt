@@ -1,5 +1,6 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.MenuItem
@@ -48,6 +49,14 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         viewModel.getCategory().observe(this, Observer { updateCategory(it) })
+        helpBtn.setOnClickListener { handleHelpBtnClick() }
+    }
+
+    private fun handleHelpBtnClick() {
+        val intent = Intent(this, ConfirmedHelpActivity::class.java)
+        intent.putExtra(IntentExtra.eventId, eventId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun updateUI(event: EventModel?) {

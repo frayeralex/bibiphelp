@@ -38,8 +38,7 @@ class WaitHelpActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-    }
+    override fun onBackPressed() {}
 
     private fun handleCloseBtnClick() {
         val intent = Intent(this, CloseEventActivity::class.java)

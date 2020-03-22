@@ -34,13 +34,15 @@
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance" />
-
         <activity
             android:name=".activities.EventDetails"
             android:label="@string/label_details_event"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity" />
-
+        <activity
+            android:name=".activities.ConfirmedHelpActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.EventDetails" />
         <activity
             android:name=".activities.CategoriesActivity"
             android:label="@string/label_categories"
