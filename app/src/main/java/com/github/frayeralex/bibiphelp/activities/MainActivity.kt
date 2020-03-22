@@ -28,6 +28,7 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
+import com.github.frayeralex.bibiphelp.utils.MapUtils
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -207,7 +208,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.setOnMarkerClickListener(this)
         mMap.setOnCameraIdleListener(this)
 
-        updateMapStyle()
+        MapUtils.updateStyle(this, mMap)
         updateCamera()
         checkLocationPermission()
 
@@ -260,18 +261,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         return false
-    }
-
-
-    private fun updateMapStyle() {
-        try {
-            mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.map_styles
-                )
-            )
-        } catch (e: NotFoundException) {
-        }
     }
 
     companion object {

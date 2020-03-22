@@ -1,6 +1,5 @@
 package com.github.frayeralex.bibiphelp.activities
 
-import android.content.res.Resources
 import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,8 +10,8 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.EventModelUtils
+import com.github.frayeralex.bibiphelp.utils.MapUtils
 import com.github.frayeralex.bibiphelp.viewModels.ConfirmedHelpViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -50,24 +49,23 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun updateMapCamera() {
-        val builder = LatLngBounds.builder()
+        val markers = mutableListOf<LatLng>()
 
         if (eventMarker != null) {
-            builder.include(LatLng(
+            markers.add(LatLng(
                 eventMarker?.position?.latitude!!,
                 eventMarker?.position?.longitude!!
             ))
         }
 
         if (myLocationMarker != null) {
-            builder.include(
-                LatLng(
-                    myLocationMarker?.position?.latitude!!,
-                    myLocationMarker?.position?.longitude!!
-                ))
+            markers.add(LatLng(
+                myLocationMarker?.position?.latitude!!,
+                myLocationMarker?.position?.longitude!!
+            ))
         }
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 200))
+        MapUtils.updateMapCamera(mMap, markers)
     }
 
     private fun updateMyLocationMarker(location: Location?) {
@@ -107,23 +105,12 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isScrollGesturesEnabled = true
         mMap.uiSettings.isScrollGesturesEnabledDuringRotateOrZoom = true
 
-        updateMapStyle()
+        MapUtils.updateStyle(this, mMap)
 
         viewModel.getEvent(eventId)
             .observe(this, Observer { updateUI(it) })
 
         viewModel.getLocationData()
             .observe(this, Observer<Location> { updateMyLocationMarker(it) })
-    }
-
-    private fun updateMapStyle() {
-        try {
-            mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.map_styles
-                )
-            )
-        } catch (e: Resources.NotFoundException) {
-        }
     }
 }
