@@ -24,8 +24,17 @@ class SPManager(context: App) : BaseSharedPreferencesManager(context, file) {
             saveString(ACTIVE_HELP_REQUEST, value)
         }
 
+    var meActiveHelperForEvent = getString(ME_ACTIVE_HELPER)
+    set(value) {
+        saveString(ME_ACTIVE_HELPER, value)
+    }
+
     fun resetActivityHelp() {
         saveString(ACTIVE_HELP_REQUEST, DEFAULT_STRING)
+    }
+
+    fun resetMeHelpForEvent() {
+        saveString(ME_ACTIVE_HELPER, DEFAULT_STRING)
     }
 
     companion object {
@@ -34,5 +43,6 @@ class SPManager(context: App) : BaseSharedPreferencesManager(context, file) {
         const val LAST_MAP_LONG = "LAST_MAP_LONG"
         const val IS_ON_BOARDED = "IS_ON_BOARDED"
         const val ACTIVE_HELP_REQUEST = "ACTIVE_HELP_REQUEST"
+        const val ME_ACTIVE_HELPER = "ME_ACTIVE_HELPER"
     }
 }

@@ -16,6 +16,9 @@
     <!--Buttons-->
     <string name="btn_publish">Опублікувати</string>
 
+    <!--Errors-->
+    <string name="error_common">Сталася помилка, спробуйте пізніше</string>
+
     <!--Help Form-->
     <string name="help_input_label">Опишіть проблему</string>
     <string name="help_input_label_empty">Поле обвязкове</string>
@@ -34,6 +37,9 @@
     <string name="confirmed_help_secondary_label">Ви можете відмовитись допомагати</string>
     <string name="confirmed_help_card_label">Відгукнулося</string>
     <string name="reject_help_btn">Скасувати</string>
+    <string name="confirmed_help_event_closed">Прохання про допомогу закрито</string>
+    <string name="confirmed_help_more_helpers_count">Число рятівників збільшилося +</string>
+    <string name="confirmed_help_less_helpers_count">Число рятівників зменшилося +</string>
 
     <!--OnBoarding-->
     <string name="onBoarding_title_1">Світ добрих людей</string>

@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase
 object FBRefs {
     val db = FirebaseDatabase.getInstance()
     const val statusField = "status"
+    const val helpersMapField = "helpers"
 
     val categoriesRef = db.getReference(Collections.CATEGORIES)
 

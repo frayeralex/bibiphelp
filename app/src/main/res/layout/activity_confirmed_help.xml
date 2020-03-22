@@ -52,7 +52,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/helpBtn"
+        app:layout_constraintBottom_toTopOf="@+id/rejectBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -100,7 +100,7 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/helpBtn"
+        android:id="@+id/rejectBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

@@ -1,12 +1,16 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.github.frayeralex.bibiphelp.R
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.github.frayeralex.bibiphelp.App
+import com.github.frayeralex.bibiphelp.constatns.EventStatuses
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.EventModelUtils
@@ -15,10 +19,16 @@ import com.github.frayeralex.bibiphelp.viewModels.ConfirmedHelpViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_confirmed_help.*
+
 
 class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private val app by lazy { application as App }
     private val viewModel by viewModels<ConfirmedHelpViewModel>()
     lateinit var eventId: String
     private lateinit var mMap: GoogleMap
@@ -31,21 +41,71 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
 
         eventId = intent.getStringExtra(IntentExtra.eventId)!!
 
+        app.getCacheManager().meActiveHelperForEvent = eventId
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.confirmedHelpMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        rejectBtn.setOnClickListener { handleRejectBtnClick() }
     }
 
     override fun onBackPressed() {}
 
+    private fun handleRejectBtnClick() {
+        // TODO replace to navigate to rejectConfirmationActivity
+
+        app.getCacheManager().resetMeHelpForEvent()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
+    }
+
     private fun updateUI(event: EventModel?) {
-        if (event != null) {
+        if (event != null && checkEventStatus(event)) {
             if (eventMarker == null) {
                 eventMarker = mMap.addMarker(EventModelUtils.getMapMarker(event))
             }
             updateMapCamera()
+            updateHelpCounterUi(event)
         }
+    }
+
+    private fun updateHelpCounterUi(event: EventModel) {
+        val currentHelpersCount = (helpersCount.text as String).toInt()
+        val updatedHelpersCount = event.helpers.size
+        helpersCount.text = updatedHelpersCount.toString()
+
+        if (updatedHelpersCount > currentHelpersCount) {
+            Toast.makeText(
+                baseContext, R.string.confirmed_help_more_helpers_count,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        if (updatedHelpersCount < currentHelpersCount) {
+            Toast.makeText(
+                baseContext, R.string.confirmed_help_less_helpers_count,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun checkEventStatus(event: EventModel): Boolean {
+        if (event.status != EventStatuses.ACTIVE) {
+            Toast.makeText(
+                baseContext, R.string.confirmed_help_event_closed,
+                Toast.LENGTH_LONG
+            ).show()
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+            return false
+        }
+        return true
     }
 
     private fun updateMapCamera() {

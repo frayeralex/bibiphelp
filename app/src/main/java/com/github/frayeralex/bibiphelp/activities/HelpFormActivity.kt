@@ -83,6 +83,7 @@ class HelpFormActivity : AppCompatActivity() {
                 intent.putExtra(IntentExtra.eventId, it)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
+                finish()
             }
         })
     }
