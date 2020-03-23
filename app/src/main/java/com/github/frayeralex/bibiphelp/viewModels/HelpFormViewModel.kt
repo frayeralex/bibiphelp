@@ -50,10 +50,12 @@ class HelpFormViewModel(application: Application) : AndroidViewModel(application
             lat = location.latitude
         ))
 
-        action.addOnSuccessListener {
+        action.addOnCompleteListener {
             isRequesting.value = false
-            newCreatedEventId.value = eventId
+
+            if (it.exception == null) {
+                newCreatedEventId.value = eventId
+            }
         }
-        action.addOnCanceledListener { isRequesting.value = false }
     }
 }

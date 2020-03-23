@@ -14,11 +14,17 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val helpRequestEventId = app.getCacheManager().activeHelpRequest
+        val meActiveHelperForEvent = app.getCacheManager().meActiveHelperForEvent
 
         when {
             helpRequestEventId != BaseSharedPreferencesManager.DEFAULT_STRING -> {
                 val intent = Intent(this, WaitHelpActivity::class.java)
                 intent.putExtra(IntentExtra.eventId, helpRequestEventId)
+                startActivity(intent)
+            }
+            meActiveHelperForEvent != BaseSharedPreferencesManager.DEFAULT_STRING -> {
+                val intent = Intent(this, ConfirmedHelpActivity::class.java)
+                intent.putExtra(IntentExtra.eventId, meActiveHelperForEvent)
                 startActivity(intent)
             }
             app.getCacheManager().isOnBoarded -> {

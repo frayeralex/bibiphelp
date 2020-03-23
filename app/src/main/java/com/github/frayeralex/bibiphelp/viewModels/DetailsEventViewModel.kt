@@ -3,6 +3,8 @@ package com.github.frayeralex.bibiphelp.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
+import com.github.frayeralex.bibiphelp.liveDatas.UserLiveData
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.repository.FBRefs
@@ -11,8 +13,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 class DetailsEventViewModel : ViewModel() {
+    private val user = UserLiveData()
     private val event : MutableLiveData<EventModel> = MutableLiveData()
     private val category: MutableLiveData<EventCategoryModel> = MutableLiveData()
+    private val helpRequestStatus = MutableLiveData(RequestStatuses.UNCALLED)
+
+    fun getUser() = user
 
     fun getEvent(eventId: String) : LiveData<EventModel?> {
         if (event.value == null) {
@@ -40,6 +46,23 @@ class DetailsEventViewModel : ViewModel() {
             })
         }
         return event
+    }
+
+    fun getRequestStatus() = helpRequestStatus
+
+    fun sendHelpRequest(eventId: String, userId: String) {
+        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.helpersMapField)
+        val action = helpersRef.child(userId).setValue(true)
+
+        helpRequestStatus.value = RequestStatuses.PENDING
+
+        action.addOnCompleteListener {
+            if (it.exception != null) {
+                helpRequestStatus.value = RequestStatuses.FAILURE
+            } else {
+                helpRequestStatus.value = RequestStatuses.SUCCESS
+            }
+        }
     }
 
     fun getCategory() = category

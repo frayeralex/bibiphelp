@@ -2,12 +2,14 @@ package com.github.frayeralex.bibiphelp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.constatns.EventStatuses
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.viewModels.WaitHelpViewModel
@@ -38,8 +40,7 @@ class WaitHelpActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-    }
+    override fun onBackPressed() {}
 
     private fun handleCloseBtnClick() {
         val intent = Intent(this, CloseEventActivity::class.java)
@@ -48,16 +49,34 @@ class WaitHelpActivity : AppCompatActivity() {
     }
 
     private fun updateUI(event: EventModel) {
-        helpersCount.text = event.helpers.size.toString()
+        if (checkEventStatus(event)) {
+            helpersCount.text = event.helpers.size.toString()
 
-        if (event.helpers.isEmpty()) {
-            waitMainTitle.text = resources.getText(R.string.wait_help_main_label)
-            waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label)
-            waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_request_placeholder))
-        } else {
-            waitMainTitle.text = resources.getText(R.string.wait_help_main_label_success)
-            waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label_success)
-            waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_coming))
+            if (event.helpers.isEmpty()) {
+                waitMainTitle.text = resources.getText(R.string.wait_help_main_label)
+                waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label)
+                waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_request_placeholder))
+            } else {
+                waitMainTitle.text = resources.getText(R.string.wait_help_main_label_success)
+                waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label_success)
+                waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_coming))
+            }
         }
+    }
+
+    private fun checkEventStatus(event: EventModel): Boolean {
+        if (event.status != EventStatuses.ACTIVE) {
+            Toast.makeText(
+                baseContext, R.string.confirmed_help_event_closed,
+                Toast.LENGTH_LONG
+            ).show()
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+            return false
+        }
+        return true
     }
 }
