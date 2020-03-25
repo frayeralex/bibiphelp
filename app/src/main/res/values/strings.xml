@@ -71,7 +71,8 @@
         существующий ключ с другим именем, замените в команде id_rsa на имя вашего файла закрытого ключа</string>
     <string name="help">Допомогти</string>
 
-    <string name="cancel_help">Ви хочете"\n"скасувати допомогу?</string>
+    <string name="wanna_reject_help">Ви хочете"\n"скасувати допомогу?</string>
+    <string name="reject_help">Відмінити допомогу</string>
     <string name="no">НІ</string>
     <string name="yes">ТАК</string>
 </resources>

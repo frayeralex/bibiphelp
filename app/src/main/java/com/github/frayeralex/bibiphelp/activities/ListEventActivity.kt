@@ -69,7 +69,7 @@ class ListEventActivity : AppCompatActivity() {
 
     inner class EventAdapter : RecyclerView.Adapter<EventHolder>() {
 
-        var events: MutableList<EventModel> = ArrayList()
+       var events: MutableList<EventModel> = ArrayList()
         lateinit var myLocation: Location
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventHolder {
@@ -89,6 +89,8 @@ class ListEventActivity : AppCompatActivity() {
         }
 
         fun refreshEvents(events: MutableList<EventModel>) {
+//            this.events =
+                events.sortBy {it.type}
             this.events = events
             notifyDataSetChanged()
         }
