@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.models.EventModel
-import com.github.frayeralex.bibiphelp.utils.EventModelUtils
+import com.github.frayeralex.bibiphelp.models.EventModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.list_users.ListEvent
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.utils.MapUtils
 import com.google.firebase.auth.FirebaseUser
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var selectedEventId: String? = null
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
+
+    private var distance: Double? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
@@ -74,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (selectedEventId != null) {
             val intent = Intent(this, EventDetails::class.java)
             intent.putExtra(IntentExtra.eventId, selectedEventId)
+            intent.putExtra(IntentExtra.eventDistance, distance)
             startActivity(intent)
         }
 
@@ -249,6 +253,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     myLocationMarker?.position?.longitude!!
                 )
 
+                this.distance = distance?: 0.0
+
                 distanceLabel.text = resources.getString(
                     R.string.distance_km!!,
                     DistanceCalculator.formatDistance(distance)
@@ -261,6 +267,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         return false
+    }
+
+
+    private fun updateMapStyle() {
+        try {
+            mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    this, R.raw.map_styles
+                )
+            )
+        } catch (e: NotFoundException) {
+        }
     }
 
     companion object {
