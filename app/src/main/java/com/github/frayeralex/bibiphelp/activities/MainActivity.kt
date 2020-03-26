@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.frayeralex.bibiphelp.models.EventModel
-import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,6 +27,7 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
+import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.utils.MapUtils
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var selectedEventId: String? = null
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var myLocationMarker: Marker? = null
+
+    private var distance: Double? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main_activity, menu)
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (selectedEventId != null) {
             val intent = Intent(this, EventDetails::class.java)
             intent.putExtra(IntentExtra.eventId, selectedEventId)
+            intent.putExtra(IntentExtra.eventDistance, distance)
             startActivity(intent)
         }
 
@@ -248,6 +251,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     myLocationMarker?.position?.latitude!!,
                     myLocationMarker?.position?.longitude!!
                 )
+
+                this.distance = distance?: 0.0
 
                 distanceLabel.text = resources.getString(
                     R.string.distance_km!!,

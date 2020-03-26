@@ -24,35 +24,29 @@ import kotlinx.android.synthetic.main.list_event.*
 class ListEventActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<ListEventViewModel>()
-
     val mEventAdapter = EventAdapter()
-
+    var myLocation: Location? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_list_activity, menu)
         return true
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_event)
-
-
         setSupportActionBar(list_toolbar)
-
         myRecyclerView.layoutManager = LinearLayoutManager(this)
         myRecyclerView.adapter = mEventAdapter
-
         viewModel.getEvents()
             .observe(this, Observer<MutableList<EventModel>> { mEventAdapter.refreshEvents(it) })
 
         viewModel.getLocationData()
             .observe(this, Observer<Location> { mEventAdapter.refreshDistance(it) })
 
+        myLocation = viewModel.getLocationData().value
         myRecyclerView.setHasFixedSize(true)
     }
-
 
     override fun
             onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -61,27 +55,21 @@ class ListEventActivity : AppCompatActivity() {
             startActivity(intent)
             true
         }
-
         else -> {
             super.onOptionsItemSelected(item)
         }
     }
 
     inner class EventAdapter : RecyclerView.Adapter<EventHolder>() {
-
         var events: MutableList<EventModel> = ArrayList()
-        lateinit var myLocation: Location
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             return EventHolder(layoutInflater.inflate(R.layout.item_event, parent, false))
-
         }
 
         override fun getItemCount(): Int {
             return events.size
         }
-
 
         override fun onBindViewHolder(holder: EventHolder, position: Int) {
             val dataEvent = events[position]
@@ -89,6 +77,14 @@ class ListEventActivity : AppCompatActivity() {
         }
 
         fun refreshEvents(events: MutableList<EventModel>) {
+            events.sortBy { it ->
+                DistanceCalculator.distance(
+                    it.lat ?: 0.0,
+                    it.long ?: 0.0,
+                    myLocation?.latitude ?: 0.0,
+                    myLocation?.longitude ?: 0.0
+                )
+            }
             this.events = events
             notifyDataSetChanged()
         }
@@ -101,16 +97,15 @@ class ListEventActivity : AppCompatActivity() {
     }
 
     inner class EventHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+
         init {
             view.setOnClickListener(this)
         }
 
         var mDistance: Double = 0.0
-
         lateinit var mdataEvent: EventModel
 
-
-        fun bind(dataEvent: EventModel, myLocation: Location) {
+        fun bind(dataEvent: EventModel, myLocation: Location?) {
             if (dataEvent != null) {
                 mdataEvent = dataEvent
             }
@@ -120,14 +115,13 @@ class ListEventActivity : AppCompatActivity() {
             mDistance = DistanceCalculator.distance(
                 dataEvent.lat ?: 0.0,
                 dataEvent.long ?: 0.0,
-                myLocation.latitude,
-                myLocation.longitude
+                myLocation?.latitude ?: 0.0,
+                myLocation?.longitude ?: 0.0
             )
             view.distance.text = resources.getString(
                 R.string.distance_km!!,
                 DistanceCalculator.formatDistance(mDistance)
             )
-
 
             val myBorder = view.frame_item_event.getBackground() as GradientDrawable
             myBorder.setColor(resources.getColor(EventCategoryModelUtils.getTypeColor(mdataEvent)))

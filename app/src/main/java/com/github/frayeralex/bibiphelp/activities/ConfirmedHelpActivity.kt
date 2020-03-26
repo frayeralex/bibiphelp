@@ -31,43 +31,43 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
     private val app by lazy { application as App }
     private val viewModel by viewModels<ConfirmedHelpViewModel>()
     lateinit var eventId: String
+    var event: EventModel? = null
     private lateinit var mMap: GoogleMap
     private var myLocationMarker: Marker? = null
     private var eventMarker: Marker? = null
+    private var challenger: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmed_help)
-
         eventId = intent.getStringExtra(IntentExtra.eventId)!!
-
+        challenger = intent.getIntExtra(IntentExtra.challenger, 0)
         app.getCacheManager().meActiveHelperForEvent = eventId
-
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.confirmedHelpMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
         rejectBtn.setOnClickListener { handleRejectBtnClick() }
     }
 
     override fun onBackPressed() {}
 
     private fun handleRejectBtnClick() {
-        // TODO replace to navigate to rejectConfirmationActivity
-
         app.getCacheManager().resetMeHelpForEvent()
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, RejectHelpActivity::class.java)
+        intent.putExtra(IntentExtra.eventId, this.event?.id)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()
     }
 
     private fun updateUI(event: EventModel?) {
+        this.event = event
         if (event != null && checkEventStatus(event)) {
             if (eventMarker == null) {
                 eventMarker = mMap.addMarker(EventModelUtils.getMapMarker(event))
             }
             updateMapCamera()
+
             updateHelpCounterUi(event)
         }
     }
@@ -77,7 +77,12 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
         val updatedHelpersCount = event.helpers.size
         helpersCount.text = updatedHelpersCount.toString()
 
-        if (updatedHelpersCount > currentHelpersCount) {
+        if ((updatedHelpersCount > currentHelpersCount) and (challenger == 1)) {
+            Toast.makeText(
+                baseContext, R.string.confirmed_help_main_label,
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
             Toast.makeText(
                 baseContext, R.string.confirmed_help_more_helpers_count,
                 Toast.LENGTH_LONG
@@ -112,17 +117,21 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
         val markers = mutableListOf<LatLng>()
 
         if (eventMarker != null) {
-            markers.add(LatLng(
-                eventMarker?.position?.latitude!!,
-                eventMarker?.position?.longitude!!
-            ))
+            markers.add(
+                LatLng(
+                    eventMarker?.position?.latitude!!,
+                    eventMarker?.position?.longitude!!
+                )
+            )
         }
 
         if (myLocationMarker != null) {
-            markers.add(LatLng(
-                myLocationMarker?.position?.latitude!!,
-                myLocationMarker?.position?.longitude!!
-            ))
+            markers.add(
+                LatLng(
+                    myLocationMarker?.position?.latitude!!,
+                    myLocationMarker?.position?.longitude!!
+                )
+            )
         }
 
         MapUtils.updateMapCamera(mMap, markers)
@@ -134,14 +143,12 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
                 myLocationMarker?.remove()
                 myLocationMarker = null
             }
-
             myLocationMarker = mMap.addMarker(
                 MarkerOptions()
                     .position(LatLng(location.latitude, location.longitude))
                     .anchor(0.5f, 0.5f)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
             )
-
             updateMapCamera()
         }
     }
@@ -151,7 +158,6 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
             super.onBackPressed()
             true
         }
-
         else -> {
             super.onOptionsItemSelected(item)
         }
