@@ -40,20 +40,12 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmed_help)
-
         eventId = intent.getStringExtra(IntentExtra.eventId)!!
-
         challenger = intent.getIntExtra(IntentExtra.challenger, 0)
-
-
-
-
         app.getCacheManager().meActiveHelperForEvent = eventId
-
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.confirmedHelpMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
         rejectBtn.setOnClickListener { handleRejectBtnClick() }
     }
 
@@ -62,9 +54,7 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun handleRejectBtnClick() {
         app.getCacheManager().resetMeHelpForEvent()
         val intent = Intent(this, RejectHelpActivity::class.java)
-
         intent.putExtra(IntentExtra.eventId, this.event?.id)
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()
@@ -92,8 +82,7 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
                 baseContext, R.string.confirmed_help_main_label,
                 Toast.LENGTH_LONG
             ).show()
-        }
-        else {
+        } else {
             Toast.makeText(
                 baseContext, R.string.confirmed_help_more_helpers_count,
                 Toast.LENGTH_LONG
@@ -128,17 +117,21 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
         val markers = mutableListOf<LatLng>()
 
         if (eventMarker != null) {
-            markers.add(LatLng(
-                eventMarker?.position?.latitude!!,
-                eventMarker?.position?.longitude!!
-            ))
+            markers.add(
+                LatLng(
+                    eventMarker?.position?.latitude!!,
+                    eventMarker?.position?.longitude!!
+                )
+            )
         }
 
         if (myLocationMarker != null) {
-            markers.add(LatLng(
-                myLocationMarker?.position?.latitude!!,
-                myLocationMarker?.position?.longitude!!
-            ))
+            markers.add(
+                LatLng(
+                    myLocationMarker?.position?.latitude!!,
+                    myLocationMarker?.position?.longitude!!
+                )
+            )
         }
 
         MapUtils.updateMapCamera(mMap, markers)
@@ -150,14 +143,12 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
                 myLocationMarker?.remove()
                 myLocationMarker = null
             }
-
             myLocationMarker = mMap.addMarker(
                 MarkerOptions()
                     .position(LatLng(location.latitude, location.longitude))
                     .anchor(0.5f, 0.5f)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
             )
-
             updateMapCamera()
         }
     }
@@ -167,7 +158,6 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
             super.onBackPressed()
             true
         }
-
         else -> {
             super.onOptionsItemSelected(item)
         }

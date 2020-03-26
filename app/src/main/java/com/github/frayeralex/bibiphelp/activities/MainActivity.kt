@@ -268,18 +268,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return false
     }
 
-
-    private fun updateMapStyle() {
-        try {
-            mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.map_styles
-                )
-            )
-        } catch (e: NotFoundException) {
-        }
-    }
-
     companion object {
         const val TAG = "MAIN_ACTIVITY"
         const val ACCESS_FINE_LOCATION = 1
