@@ -207,6 +207,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.setPadding(20, 20, 20, 150)
 
         mMap.setOnMarkerClickListener(this)
         mMap.setOnCameraIdleListener(this)
@@ -269,7 +270,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     companion object {
-        const val TAG = "MAIN_ACTIVITY"
         const val ACCESS_FINE_LOCATION = 1
         const val DEFAULT_ANIMATION_DURATION = 300
     }
