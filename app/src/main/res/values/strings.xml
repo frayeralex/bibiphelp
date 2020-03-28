@@ -39,7 +39,7 @@
     <string name="reject_help_btn">Скасувати</string>
     <string name="confirmed_help_event_closed">Прохання про допомогу закрито</string>
     <string name="confirmed_help_more_helpers_count">Число рятівників збільшилося +</string>
-    <string name="confirmed_help_less_helpers_count">Число рятівників зменшилося +</string>
+    <string name="confirmed_help_less_helpers_count">Число рятівників зменшилося -</string>
 
     <!--OnBoarding-->
     <string name="onBoarding_title_1">Світ добрих людей</string>
