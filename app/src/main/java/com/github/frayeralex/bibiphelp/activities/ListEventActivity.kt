@@ -77,14 +77,14 @@ class ListEventActivity : AppCompatActivity() {
         }
 
         fun refreshEvents(events: MutableList<EventModel>) {
-            events.sortBy { it ->
+            events.sortWith(compareBy { it ->
                 DistanceCalculator.distance(
                     it.lat ?: 0.0,
                     it.long ?: 0.0,
                     myLocation?.latitude ?: 0.0,
                     myLocation?.longitude ?: 0.0
                 )
-            }
+            })
             this.events = events
             notifyDataSetChanged()
         }
