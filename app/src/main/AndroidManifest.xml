@@ -33,7 +33,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.RejectHelpActivity"
             android:label="@string/reject_help"
@@ -47,7 +47,8 @@
         <activity
             android:name=".activities.ConfirmedHelpActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.EventDetails" />
+            android:parentActivityName=".activities.EventDetails"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activities.CategoriesActivity"
             android:label="@string/label_categories"
@@ -61,7 +62,8 @@
         <activity
             android:name=".activities.WaitHelpActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.HelpFormActivity" />
+            android:parentActivityName=".activities.HelpFormActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activities.CloseEventActivity"
             android:label="@string/label_close_event"
