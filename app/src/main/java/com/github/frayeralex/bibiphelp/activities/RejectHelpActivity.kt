@@ -1,5 +1,6 @@
 package com.github.frayeralex.bibiphelp.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
@@ -15,10 +17,8 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_reject_help.*
 
 class RejectHelpActivity : AppCompatActivity() {
-    companion object {
-        const val SAVIOR = 1
-    }
 
+    private val app by lazy { application as App }
     private val viewModel by viewModels<DetailsEventViewModel>()
     private var user: FirebaseUser? = null
     lateinit var eventId: String
@@ -31,7 +31,7 @@ class RejectHelpActivity : AppCompatActivity() {
         setSupportActionBar(toolbarCancelHelp)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         viewModel.getUser().observe(this, Observer { user = it })
-        viewModel.getRequestStatus().observe(this, Observer { handleRequestStatus(it) })
+        viewModel.getHelperRejectRequestStatus().observe(this, Observer { handleRequestStatus(it) })
         noRejectBtn.setOnClickListener { noRejectHelp() }
         yesRejectBtn.setOnClickListener { yesRejectHelp() }
     }
@@ -40,9 +40,8 @@ class RejectHelpActivity : AppCompatActivity() {
         requestStatus = status
         when (status) {
             RequestStatuses.SUCCESS -> {
-                val intent = Intent(this, ConfirmedHelpActivity::class.java)
-                intent.putExtra(IntentExtra.eventId, eventId)
-                intent.putExtra(IntentExtra.challenger, SAVIOR)
+                app.getCacheManager().resetMeHelpForEvent()
+                val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
                 finish()
@@ -59,14 +58,14 @@ class RejectHelpActivity : AppCompatActivity() {
         }
     }
 
-    private fun noRejectHelp() {
+    private fun yesRejectHelp() {
         if (requestStatus == RequestStatuses.PENDING || user == null) return
-        viewModel.sendHelpRequest(eventId, user?.uid.toString())
+        viewModel.rejectHelperRequest(eventId, user?.uid.toString())
+        setResult(Activity.RESULT_OK)
     }
 
-    private fun yesRejectHelp() {
+    private fun noRejectHelp() {
         super.onBackPressed()
-        true
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

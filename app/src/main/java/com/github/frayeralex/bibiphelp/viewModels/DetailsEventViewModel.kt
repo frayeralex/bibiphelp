@@ -17,6 +17,7 @@ class DetailsEventViewModel : ViewModel() {
     private val event : MutableLiveData<EventModel> = MutableLiveData()
     private val category: MutableLiveData<EventCategoryModel> = MutableLiveData()
     private val helpRequestStatus = MutableLiveData(RequestStatuses.UNCALLED)
+    private val helperRejectRequestStatus = MutableLiveData(RequestStatuses.UNCALLED)
 
     fun getUser() = user
 
@@ -64,6 +65,23 @@ class DetailsEventViewModel : ViewModel() {
             }
         }
     }
+
+    fun rejectHelperRequest(eventId: String, userId: String) {
+        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.helpersMapField)
+        val action = helpersRef.child(userId).removeValue()
+
+        helperRejectRequestStatus.value = RequestStatuses.PENDING
+
+        action.addOnCompleteListener {
+            if (it.exception != null) {
+                helperRejectRequestStatus.value = RequestStatuses.FAILURE
+            } else {
+                helperRejectRequestStatus.value = RequestStatuses.SUCCESS
+            }
+        }
+    }
+
+    fun getHelperRejectRequestStatus() = helperRejectRequestStatus
 
     fun getCategory() = category
 }
