@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private var selectedEventId: String? = null
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
-    private var myLocationMarker: Marker? = null
+    private var myLocation: Location? = null
 
     private var distance: Double? = null
 
@@ -149,6 +149,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    private fun showMyLocationBtn() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap?.isMyLocationEnabled = true
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -157,11 +164,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         when (requestCode) {
             ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    fusedLocationClient.lastLocation.addOnSuccessListener {
-                        updateMyLocationMarker(
-                            it
-                        )
-                    }
+                    showMyLocationBtn()
+                    fusedLocationClient.lastLocation.addOnSuccessListener { myLocation = it }
                 } else {
                     // todo
                     // permission denied, boo! Disable the
@@ -188,22 +192,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private fun updateMyLocationMarker(location: Location?) {
-        if (location != null) {
-            if (myLocationMarker != null) {
-                myLocationMarker?.remove()
-                myLocationMarker = null
-            }
-
-            myLocationMarker = mMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(location.latitude, location.longitude))
-                    .anchor((0.5).toFloat(), (0.5).toFloat())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_geolocation))
-            )
-        }
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isMapToolbarEnabled = false
@@ -220,7 +208,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             .observe(this, Observer<MutableList<EventModel>> { handleEventsUpdated(it) })
 
         viewModel.getLocationData()
-            .observe(this, Observer<Location> { updateMyLocationMarker(it) })
+            .observe(this, Observer<Location> {
+                myLocation = it
+            })
+        showMyLocationBtn()
     }
 
     private fun updateEventMarkers(event: EventModel?) {
@@ -245,15 +236,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         if (selectedEventId != null) {
             bottomTypeLabel.text = marker!!.title
-            if (myLocationMarker != null) {
+            if (myLocation != null) {
                 val distance = DistanceCalculator.distance(
                     marker.position.latitude,
                     marker.position.longitude,
-                    myLocationMarker?.position?.latitude!!,
-                    myLocationMarker?.position?.longitude!!
+                    myLocation?.latitude!!,
+                    myLocation?.longitude!!
                 )
 
-                this.distance = distance?: 0.0
+                this.distance = distance ?: 0.0
 
                 distanceLabel.text = resources.getString(
                     R.string.distance_km!!,
