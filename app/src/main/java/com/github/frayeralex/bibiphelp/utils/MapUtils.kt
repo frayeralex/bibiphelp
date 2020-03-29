@@ -17,14 +17,15 @@ object MapUtils {
                     context, R.raw.map_styles
                 )
             )
-        } catch (e: Resources.NotFoundException) {}
+        } catch (e: Resources.NotFoundException) {
+        }
     }
 
     fun updateMapCamera(mMap: GoogleMap, markers: List<LatLng>, zoomLevel: Float? = null) {
         if (markers.isEmpty()) return
         val builder = LatLngBounds.builder()
 
-        markers.forEach {  builder.include(it) }
+        markers.forEach { builder.include(it) }
 
         if (zoomLevel !== null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(builder.build().center, zoomLevel))
