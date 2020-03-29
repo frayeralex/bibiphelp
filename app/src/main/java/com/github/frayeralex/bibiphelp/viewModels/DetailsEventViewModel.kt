@@ -52,7 +52,7 @@ class DetailsEventViewModel : ViewModel() {
     fun getRequestStatus() = helpRequestStatus
 
     fun sendHelpRequest(eventId: String, userId: String) {
-        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.helpersMapField)
+        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.EVENT_HELPERS)
         val action = helpersRef.child(userId).setValue(true)
 
         helpRequestStatus.value = RequestStatuses.PENDING
@@ -67,7 +67,7 @@ class DetailsEventViewModel : ViewModel() {
     }
 
     fun rejectHelperRequest(eventId: String, userId: String) {
-        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.helpersMapField)
+        val helpersRef = FBRefs.eventsRef.child(eventId).child(FBRefs.EVENT_HELPERS)
         val action = helpersRef.child(userId).removeValue()
 
         helperRejectRequestStatus.value = RequestStatuses.PENDING
