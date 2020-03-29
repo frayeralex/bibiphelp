@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.view.*
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.utils.EventCategoryModelUtils
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
@@ -36,16 +39,39 @@ class ListEventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_event)
         setSupportActionBar(list_toolbar)
+
         myRecyclerView.layoutManager = LinearLayoutManager(this)
         myRecyclerView.adapter = mEventAdapter
+        myRecyclerView.setHasFixedSize(true)
+
         viewModel.getEvents()
             .observe(this, Observer<MutableList<EventModel>> { mEventAdapter.refreshEvents(it) })
 
         viewModel.getLocationData()
-            .observe(this, Observer<Location> { mEventAdapter.refreshDistance(it) })
+            .observe(this, Observer<Location> {
+                myLocation = it
+                mEventAdapter.refreshDistance(it)
+            })
+        viewModel.getEventsRequestStatus()
+            .observe(this, Observer<String> { handleEventRequestStatus(it) })
+    }
 
-        myLocation = viewModel.getLocationData().value
-        myRecyclerView.setHasFixedSize(true)
+    private fun handleEventRequestStatus(status: String) {
+        when (status) {
+            RequestStatuses.PENDING -> {
+                progressBar.isVisible = true
+            }
+            RequestStatuses.SUCCESS -> {
+                progressBar.isVisible = false
+            }
+            RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
+                Toast.makeText(
+                    baseContext, R.string.error_common,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun

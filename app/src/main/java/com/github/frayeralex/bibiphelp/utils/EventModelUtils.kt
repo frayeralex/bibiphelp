@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 object EventModelUtils {
-    @JvmStatic
     fun getPin(event: EventModel): BitmapDescriptor = when (event.type) {
         EventTypes.OIL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_1)
         EventTypes.WHEEL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_2)
@@ -19,17 +18,16 @@ object EventModelUtils {
         else -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
     }
 
-    @JvmStatic
     fun getCoordinates(event: EventModel): LatLng = LatLng(event.lat!!, event.long!!)
 
-    @JvmStatic
-    fun getMapMarker(event: EventModel, title: String? = event.message): MarkerOptions = MarkerOptions()
-        .position(
-            getCoordinates(
-                event
+    fun getMapMarker(event: EventModel, title: String? = event.message): MarkerOptions =
+        MarkerOptions()
+            .position(
+                getCoordinates(
+                    event
+                )
             )
-        )
-        .title(title)
-        .anchor((0.5).toFloat(), (0.5).toFloat())
-        .icon(getPin(event))
+            .title(title)
+            .anchor((0.5).toFloat(), (0.5).toFloat())
+            .icon(getPin(event))
 }

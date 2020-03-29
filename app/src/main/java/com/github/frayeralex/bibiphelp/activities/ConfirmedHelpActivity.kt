@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.github.frayeralex.bibiphelp.R
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.EventStatuses
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.utils.MapUtils
@@ -24,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_confirmed_help.*
+import kotlinx.android.synthetic.main.activity_confirmed_help.progressBar
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -44,6 +48,27 @@ class ConfirmedHelpActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.confirmedHelpMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
         rejectBtn.setOnClickListener { handleRejectBtnClick() }
+
+        viewModel.getEventRequestStatus()
+            .observe(this, Observer<String> { handleEventRequestStatus(it) })
+    }
+
+    private fun handleEventRequestStatus(status: String) {
+        when (status) {
+            RequestStatuses.PENDING -> {
+                progressBar.isVisible = true
+            }
+            RequestStatuses.SUCCESS -> {
+                progressBar.isVisible = false
+            }
+            RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
+                Toast.makeText(
+                    baseContext, R.string.error_common,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onBackPressed() {}

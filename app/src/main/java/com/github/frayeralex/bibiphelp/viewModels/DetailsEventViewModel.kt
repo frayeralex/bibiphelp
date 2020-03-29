@@ -14,37 +14,40 @@ import com.google.firebase.database.ValueEventListener
 
 class DetailsEventViewModel : ViewModel() {
     private val user = UserLiveData()
-    private val event : MutableLiveData<EventModel> = MutableLiveData()
+    private val event: MutableLiveData<EventModel> = MutableLiveData()
     private val category: MutableLiveData<EventCategoryModel> = MutableLiveData()
     private val helpRequestStatus = MutableLiveData(RequestStatuses.UNCALLED)
     private val helperRejectRequestStatus = MutableLiveData(RequestStatuses.UNCALLED)
 
     fun getUser() = user
 
-    fun getEvent(eventId: String) : LiveData<EventModel?> {
+    fun getEvent(eventId: String): LiveData<EventModel?> {
         if (event.value == null) {
-            FBRefs.eventsRef.child(eventId).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
+            FBRefs.eventsRef.child(eventId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                    if (dataSnapshot.exists()) {
-                        val eventData = dataSnapshot.getValue(EventModel::class.java)
-                        event.value = eventData
+                        if (dataSnapshot.exists()) {
+                            val eventData = dataSnapshot.getValue(EventModel::class.java)
+                            event.value = eventData
 
-                        FBRefs.categoriesRef.child(eventData?.type.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            FBRefs.categoriesRef.child(eventData?.type.toString())
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                                if (dataSnapshot.exists()) {
-                                    category.value = dataSnapshot.getValue(EventCategoryModel::class.java)
-                                }
-                            }
+                                        if (dataSnapshot.exists()) {
+                                            category.value =
+                                                dataSnapshot.getValue(EventCategoryModel::class.java)
+                                        }
+                                    }
 
-                            override fun onCancelled(error: DatabaseError) {}
-                        })
+                                    override fun onCancelled(error: DatabaseError) {}
+                                })
+                        }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
+                    override fun onCancelled(error: DatabaseError) {}
+                })
         }
         return event
     }

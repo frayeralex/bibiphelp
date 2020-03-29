@@ -18,5 +18,6 @@ object FBRefs {
 
     val eventsRef = db.getReference(Collections.EVENTS)
 
-    val activeEventsRef = eventsRef.orderByChild(EVENT_STATUS).equalTo(EventStatuses.ACTIVE.toDouble())
+    val activeEventsRef =
+        eventsRef.orderByChild(EVENT_STATUS).equalTo(EventStatuses.ACTIVE.toDouble())
 }

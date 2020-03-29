@@ -8,14 +8,18 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.R
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.utils.EventCategoryModelUtils
 import com.github.frayeralex.bibiphelp.viewModels.CategoriesViewModel
 import kotlinx.android.synthetic.main.activity_categories.*
+import kotlinx.android.synthetic.main.activity_categories.progressBar
 
 
 class CategoriesActivity : AppCompatActivity() {
@@ -31,6 +35,27 @@ class CategoriesActivity : AppCompatActivity() {
 
         viewModel.getCategories()
             .observe(this, Observer<MutableList<EventCategoryModel>> { handleCategoryUpdated(it) })
+
+        viewModel.getCategoriesRequestStatus()
+            .observe(this, Observer<String> { handleEventRequestStatus(it) })
+    }
+
+    private fun handleEventRequestStatus(status: String) {
+        when (status) {
+            RequestStatuses.PENDING -> {
+                progressBar.isVisible = true
+            }
+            RequestStatuses.SUCCESS -> {
+                progressBar.isVisible = false
+            }
+            RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
+                Toast.makeText(
+                    baseContext, R.string.error_common,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

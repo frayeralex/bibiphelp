@@ -10,10 +10,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.viewModels.ListEventViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.model.*
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.utils.MapUtils
@@ -69,6 +72,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         viewModel.getUser().observe(this, Observer<FirebaseUser> { user = it })
 
+        viewModel.getEventsRequestStatus()
+            .observe(this, Observer<String> { handleEventRequestStatus(it) })
+
         bottomBtn.setOnClickListener { handleHelpBtnClick() }
     }
 
@@ -79,7 +85,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             intent.putExtra(IntentExtra.eventDistance, distance)
             startActivity(intent)
         }
+    }
 
+    private fun handleEventRequestStatus(status: String) {
+        when (status) {
+            RequestStatuses.PENDING -> {
+                progressBar.isVisible = true
+            }
+            RequestStatuses.SUCCESS -> {
+                progressBar.isVisible = false
+            }
+            RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
+                Toast.makeText(
+                    baseContext, R.string.error_common,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun handleEventsUpdated(events: MutableList<EventModel>?) {
@@ -151,7 +174,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun showMyLocationBtn() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             mMap?.isMyLocationEnabled = true
         }
     }

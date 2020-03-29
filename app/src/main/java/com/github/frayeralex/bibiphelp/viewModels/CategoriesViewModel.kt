@@ -13,13 +13,14 @@ import com.google.firebase.database.ValueEventListener
 import java.lang.Error
 
 class CategoriesViewModel : ViewModel() {
-    private val categories : MutableLiveData<MutableList<EventCategoryModel>> = MutableLiveData()
+    private val categories: MutableLiveData<MutableList<EventCategoryModel>> = MutableLiveData()
 
-    private val categoryStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
+    private val categoriesRequestStatus: MutableLiveData<String> =
+        MutableLiveData(RequestStatuses.UNCALLED)
 
     fun getCategories(): LiveData<MutableList<EventCategoryModel>> {
         if (categories.value === null) {
-            categoryStatus.value = RequestStatuses.PENDING
+            categoriesRequestStatus.value = RequestStatuses.PENDING
 
             FBRefs.categoriesRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -37,16 +38,18 @@ class CategoriesViewModel : ViewModel() {
                     }
 
                     categories.value = categoriesList
-                    categoryStatus.value = RequestStatuses.SUCCESS
+                    categoriesRequestStatus.value = RequestStatuses.SUCCESS
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    categoryStatus.value = RequestStatuses.FAILURE
+                    categoriesRequestStatus.value = RequestStatuses.FAILURE
                 }
             })
         }
         return categories
     }
+
+    fun getCategoriesRequestStatus() = categoriesRequestStatus
 
     companion object {
         const val TAG = "CategoriesViewModel"

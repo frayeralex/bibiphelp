@@ -6,7 +6,7 @@ import com.github.frayeralex.bibiphelp.models.EventCategoryModel
 import com.github.frayeralex.bibiphelp.models.EventModel
 
 object EventCategoryModelUtils {
-    @JvmStatic
+
     fun getImgResource(eventCategory: EventCategoryModel): Int = when (eventCategory.id) {
         EventTypes.OIL -> R.drawable.category_1_icon
         EventTypes.WHEEL -> R.drawable.category_2_icon
@@ -16,7 +16,7 @@ object EventCategoryModelUtils {
         EventTypes.OTHER -> R.drawable.category_6_icon
         else -> R.drawable.category_6_icon
     }
-    @JvmStatic
+
     fun getTypeColor(event: EventModel) = when (event.type) {
         EventTypes.OIL -> R.color.run_out_of_fuel
         EventTypes.WHEEL -> R.color.wheel_replacement
@@ -25,7 +25,7 @@ object EventCategoryModelUtils {
         EventTypes.TOWING -> R.color.towing
         else -> R.color.other
     }
-    @JvmStatic
+
     fun getTypeLabel(event: EventModel) = when (event.type) {
         EventTypes.OIL -> R.string.srun_out_of_fuel
         EventTypes.WHEEL -> R.string.sheel_replacement

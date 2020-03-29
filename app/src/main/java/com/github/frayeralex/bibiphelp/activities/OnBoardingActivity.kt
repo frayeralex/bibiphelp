@@ -25,7 +25,6 @@ class OnBoardingActivity : AppCompatActivity() {
     private var currentSlide: Int = 0
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -42,13 +42,15 @@ class HelpFormViewModel(application: Application) : AndroidViewModel(application
         val eventRef = FBRefs.eventsRef.push()
         val eventId = eventRef.key
 
-        val action = eventRef.setValue(EventModel(
-            id = eventRef.key,
-            message = message,
-            type = categoryId,
-            long = location.longitude,
-            lat = location.latitude
-        ))
+        val action = eventRef.setValue(
+            EventModel(
+                id = eventRef.key,
+                message = message,
+                type = categoryId,
+                long = location.longitude,
+                lat = location.latitude
+            )
+        )
 
         action.addOnCompleteListener {
             isRequesting.value = false

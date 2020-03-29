@@ -16,24 +16,25 @@ class ConfirmedHelpViewModel(application: Application) : AndroidViewModel(applic
 
     private val locationData = LocationLiveData(application)
 
-    private val eventsStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
+    private val eventRequestStatus: MutableLiveData<String> =
+        MutableLiveData(RequestStatuses.UNCALLED)
 
-    private val event : MutableLiveData<EventModel> = MutableLiveData()
+    private val event: MutableLiveData<EventModel> = MutableLiveData()
 
-    fun getEvent(eventId: String) : LiveData<EventModel> {
+    fun getEvent(eventId: String): LiveData<EventModel> {
         if (event.value == null) {
-            eventsStatus.value = RequestStatuses.PENDING
+            eventRequestStatus.value = RequestStatuses.PENDING
             FBRefs.eventsRef.child(eventId).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                     if (dataSnapshot.exists()) {
                         event.value = dataSnapshot.getValue(EventModel::class.java)
-                        eventsStatus.value = RequestStatuses.SUCCESS
+                        eventRequestStatus.value = RequestStatuses.SUCCESS
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    eventsStatus.value = RequestStatuses.FAILURE
+                    eventRequestStatus.value = RequestStatuses.FAILURE
                 }
             })
         }
@@ -41,4 +42,6 @@ class ConfirmedHelpViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun getLocationData() = locationData
+
+    fun getEventRequestStatus() = eventRequestStatus
 }
