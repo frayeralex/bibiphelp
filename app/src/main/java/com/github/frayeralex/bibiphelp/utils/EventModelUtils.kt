@@ -10,11 +10,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 object EventModelUtils {
     fun getPin(event: EventModel): BitmapDescriptor = when (event.type) {
-        EventTypes.OIL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_1)
-        EventTypes.WHEEL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_2)
-        EventTypes.ENERGY -> BitmapDescriptorFactory.fromResource(R.drawable.pin_3)
+        EventTypes.OIL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
+        EventTypes.WHEEL -> BitmapDescriptorFactory.fromResource(R.drawable.pin_1)
+        EventTypes.ENERGY -> BitmapDescriptorFactory.fromResource(R.drawable.pin_2)
         EventTypes.SNOW -> BitmapDescriptorFactory.fromResource(R.drawable.pin_4)
-        EventTypes.TOWING -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
+        EventTypes.TOWING -> BitmapDescriptorFactory.fromResource(R.drawable.pin_3)
         else -> BitmapDescriptorFactory.fromResource(R.drawable.pin_5)
     }
 
