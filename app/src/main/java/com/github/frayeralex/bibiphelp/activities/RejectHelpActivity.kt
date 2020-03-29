@@ -80,6 +80,4 @@ class RejectHelpActivity : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
-
-    override fun onBackPressed() {}
 }

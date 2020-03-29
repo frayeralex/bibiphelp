@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "912620131863-q2esdc3fkrqgal1dk0d4n2o4e61q3e8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.frayeralex.bibiphelp",
+            "certificate_hash": "cf8cd6050cbacfaf624c72091cdeed8e5d20ea28"
+          }
+        },
+        {
           "client_id": "912620131863-cfritlj52mvlg83osm2a3h9qrc671ga7.apps.googleusercontent.com",
           "client_type": 3
         }
