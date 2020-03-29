@@ -6,11 +6,13 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
 import com.github.frayeralex.bibiphelp.constatns.EventStatuses
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.models.EventModel
 import com.github.frayeralex.bibiphelp.viewModels.WaitHelpViewModel
 import kotlinx.android.synthetic.main.activity_wait_help.*
@@ -20,7 +22,7 @@ class WaitHelpActivity : AppCompatActivity() {
 
     private val app by lazy { application as App }
     private val viewModel by viewModels<WaitHelpViewModel>()
-    private lateinit var eventId : String
+    private lateinit var eventId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +33,34 @@ class WaitHelpActivity : AppCompatActivity() {
 
         app.getCacheManager().activeHelpRequest = eventId
 
-        closeEventBtn.setOnClickListener{ handleCloseBtnClick() }
+        closeEventBtn.setOnClickListener { handleCloseBtnClick() }
 
         viewModel.getEvent(eventId).observe(this, Observer {
             if (it != null) {
                 updateUI(it)
             }
         })
+
+        viewModel.getEventRequestStatus()
+            .observe(this, Observer<String> { handleEventRequestStatus(it) })
+    }
+
+    private fun handleEventRequestStatus(status: String) {
+        when (status) {
+            RequestStatuses.PENDING -> {
+                progressBar.isVisible = true
+            }
+            RequestStatuses.SUCCESS -> {
+                progressBar.isVisible = false
+            }
+            RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
+                Toast.makeText(
+                    baseContext, R.string.error_common,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onBackPressed() {}
@@ -55,11 +78,22 @@ class WaitHelpActivity : AppCompatActivity() {
             if (event.helpers.isEmpty()) {
                 waitMainTitle.text = resources.getText(R.string.wait_help_main_label)
                 waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label)
-                waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_request_placeholder))
+                waitMainImg.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.help_request_placeholder
+                    )
+                )
             } else {
                 waitMainTitle.text = resources.getText(R.string.wait_help_main_label_success)
-                waitSecondaryTitle.text = resources.getText(R.string.wait_help_secondary_label_success)
-                waitMainImg.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.help_coming))
+                waitSecondaryTitle.text =
+                    resources.getText(R.string.wait_help_secondary_label_success)
+                waitMainImg.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.help_coming
+                    )
+                )
             }
         }
     }

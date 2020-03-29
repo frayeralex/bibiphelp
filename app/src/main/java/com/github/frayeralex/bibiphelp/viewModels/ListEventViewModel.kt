@@ -22,11 +22,12 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val user = UserLiveData()
 
-    private val eventsStatus: MutableLiveData<String> = MutableLiveData(RequestStatuses.UNCALLED)
+    private val eventsRequestStatus: MutableLiveData<String> =
+        MutableLiveData(RequestStatuses.UNCALLED)
 
     fun getEvents(): LiveData<MutableList<EventModel>> {
         if (events.value === null) {
-            eventsStatus.value = RequestStatuses.PENDING
+            eventsRequestStatus.value = RequestStatuses.PENDING
 
             FBRefs.activeEventsRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -44,11 +45,11 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
                     }
 
                     events.value = eventsList
-                    eventsStatus.value = RequestStatuses.SUCCESS
+                    eventsRequestStatus.value = RequestStatuses.SUCCESS
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    eventsStatus.value = RequestStatuses.FAILURE
+                    eventsRequestStatus.value = RequestStatuses.FAILURE
                 }
             })
         }
@@ -58,6 +59,8 @@ class ListEventViewModel(application: Application) : AndroidViewModel(applicatio
     fun getLocationData() = locationData
 
     fun getUser() = user
+
+    fun getEventsRequestStatus() = eventsRequestStatus
 
     companion object {
         const val TAG = "ListEventViewModel"

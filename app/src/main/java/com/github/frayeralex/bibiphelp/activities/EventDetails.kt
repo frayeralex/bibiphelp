@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.github.frayeralex.bibiphelp.R
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
@@ -62,7 +63,7 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
 
     private fun handleRequestStatus(status: String) {
         requestStatus = status
-        when(status) {
+        when (status) {
             RequestStatuses.SUCCESS -> {
                 val intent = Intent(this, ConfirmedHelpActivity::class.java)
                 intent.putExtra(IntentExtra.eventId, eventId)
@@ -71,13 +72,14 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
                 finish()
             }
             RequestStatuses.FAILURE -> {
+                progressBar.isVisible = false
                 Toast.makeText(
                     baseContext, R.string.error_common,
                     Toast.LENGTH_LONG
                 ).show()
             }
             RequestStatuses.PENDING -> {
-                // todo add progress bar
+                progressBar.isVisible = true
             }
         }
     }
@@ -100,10 +102,14 @@ class EventDetails : AppCompatActivity(), OnMapReadyCallback {
 
     private fun updateMapCamera() {
         if (eventMarker != null) {
-            MapUtils.updateMapCamera(mMap, listOf(LatLng(
-                eventMarker?.position?.latitude!!,
-                eventMarker?.position?.longitude!!
-            )), 14f)
+            MapUtils.updateMapCamera(
+                mMap, listOf(
+                    LatLng(
+                        eventMarker?.position?.latitude!!,
+                        eventMarker?.position?.longitude!!
+                    )
+                ), 14f
+            )
         }
     }
 

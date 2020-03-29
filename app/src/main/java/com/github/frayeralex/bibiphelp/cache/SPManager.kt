@@ -25,9 +25,9 @@ class SPManager(context: App) : BaseSharedPreferencesManager(context, file) {
         }
 
     var meActiveHelperForEvent = getString(ME_ACTIVE_HELPER)
-    set(value) {
-        saveString(ME_ACTIVE_HELPER, value)
-    }
+        set(value) {
+            saveString(ME_ACTIVE_HELPER, value)
+        }
 
     fun resetActivityHelp() {
         saveString(ACTIVE_HELP_REQUEST, DEFAULT_STRING)

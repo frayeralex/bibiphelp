@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
@@ -51,9 +52,10 @@ class RejectHelpActivity : AppCompatActivity() {
                     baseContext, R.string.error_common,
                     Toast.LENGTH_LONG
                 ).show()
+                progressBar.isVisible = false
             }
             RequestStatuses.PENDING -> {
-                // todo add progress bar
+                progressBar.isVisible = true
             }
         }
     }

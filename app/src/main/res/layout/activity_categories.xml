@@ -37,4 +37,6 @@
         </LinearLayout>
     </ScrollView>
 
+    <include layout="@layout/progress_bar" android:id="@+id/progressBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

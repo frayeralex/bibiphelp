@@ -13,7 +13,7 @@ object DistanceCalculator {
         unit: String = KILOMETERS
     ): Double {
         return if (lat1 == lat2 && lon1 == lon2) {
-           0.toDouble()
+            0.toDouble()
         } else {
             val theta = lon1 - lon2
             var dist =

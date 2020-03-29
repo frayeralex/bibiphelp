@@ -73,5 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <include layout="@layout/progress_bar" android:id="@+id/progressBar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

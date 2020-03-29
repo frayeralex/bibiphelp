@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.App
 import com.github.frayeralex.bibiphelp.R
-import com.github.frayeralex.bibiphelp.cache.BaseSharedPreferencesManager
 import com.github.frayeralex.bibiphelp.constatns.EventStatuses
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
 import com.github.frayeralex.bibiphelp.viewModels.CloseEventViewModel
@@ -23,9 +22,10 @@ import kotlinx.android.synthetic.main.activity_close_event.*
 class CloseEventActivity : AppCompatActivity() {
 
     private val app by lazy { application as App }
-    private val optionsIdList = listOf(EventStatuses.SUCCESS, EventStatuses.SELF, EventStatuses.NONACTUAL)
+    private val optionsIdList =
+        listOf(EventStatuses.SUCCESS, EventStatuses.SELF, EventStatuses.NONACTUAL)
     private val viewModel by viewModels<CloseEventViewModel>()
-    private lateinit var eventId : String
+    private lateinit var eventId: String
     private var isRequesting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,7 +93,7 @@ class CloseEventActivity : AppCompatActivity() {
     }
 
     private fun createLabel(index: Int) = TextView(this).apply {
-        text = when(index) {
+        text = when (index) {
             EventStatuses.SUCCESS -> resources.getText(R.string.close_option_success)
             EventStatuses.SELF -> resources.getText(R.string.close_option_self)
             EventStatuses.NONACTUAL -> resources.getText(R.string.close_option_non_actual)
@@ -141,12 +141,14 @@ class CloseEventActivity : AppCompatActivity() {
 
         img.layoutParams = params
 
-        img.setImageResource(when(index) {
-            EventStatuses.SUCCESS -> R.drawable.close_opt_1
-            EventStatuses.SELF -> R.drawable.close_opt_2
-            EventStatuses.NONACTUAL -> R.drawable.close_opt_3
-            else -> R.drawable.close_opt_3
-        })
+        img.setImageResource(
+            when (index) {
+                EventStatuses.SUCCESS -> R.drawable.close_opt_1
+                EventStatuses.SELF -> R.drawable.close_opt_2
+                EventStatuses.NONACTUAL -> R.drawable.close_opt_3
+                else -> R.drawable.close_opt_3
+            }
+        )
 
         return img
     }
