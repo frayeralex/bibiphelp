@@ -2,6 +2,7 @@ package com.github.frayeralex.bibiphelp.activities
 
 import com.github.frayeralex.bibiphelp.R
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.location.Location
 import android.os.Bundle
@@ -17,7 +18,10 @@ import androidx.lifecycle.Observer
 import com.github.frayeralex.bibiphelp.constatns.EventTypes
 import com.github.frayeralex.bibiphelp.constatns.InputValidation
 import com.github.frayeralex.bibiphelp.constatns.IntentExtra
+import com.github.frayeralex.bibiphelp.utils.PermissionManager
 import com.github.frayeralex.bibiphelp.viewModels.HelpFormViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_help_form.*
 
 
@@ -26,6 +30,8 @@ class HelpFormActivity : AppCompatActivity() {
     private val viewModel by viewModels<HelpFormViewModel>()
     private var categoryId: Int? = null
     private var categoryLabel = ""
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var isRequesting = false
     private var location: Location? = null
@@ -41,6 +47,8 @@ class HelpFormActivity : AppCompatActivity() {
         setSupportActionBar(toolbarHelp)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = categoryLabel
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         textCount.text = "0 / ${InputValidation.helpMsgMaxLength}"
 
@@ -133,13 +141,32 @@ class HelpFormActivity : AppCompatActivity() {
         }
 
         if (location == null) {
-            //todo implement permission request
-            return Toast.makeText(
-                baseContext, "Need location permissions",
-                Toast.LENGTH_LONG
-            ).show()
+            PermissionManager.checkLocationPermission(this, ACCESS_FINE_LOCATION)
+
+            return
         }
 
         viewModel.createHelpRequest(message, categoryId!!, location!!)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            ACCESS_FINE_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location = it }
+                }
+                return
+            }
+            else -> {
+            }
+        }
+    }
+
+    companion object {
+        const val ACCESS_FINE_LOCATION = 1
     }
 }

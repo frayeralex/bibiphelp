@@ -32,6 +32,7 @@ import com.github.frayeralex.bibiphelp.constatns.RequestStatuses
 import com.github.frayeralex.bibiphelp.utils.DistanceCalculator
 import com.github.frayeralex.bibiphelp.utils.EventModelUtils
 import com.github.frayeralex.bibiphelp.utils.MapUtils
+import com.github.frayeralex.bibiphelp.utils.PermissionManager
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -149,27 +150,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                // todo handle
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    ACCESS_FINE_LOCATION
-                )
-            }
-        }
+        PermissionManager.checkLocationPermission(this, ACCESS_FINE_LOCATION)
     }
 
     private fun showMyLocationBtn() {
@@ -190,10 +171,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     showMyLocationBtn()
                     fusedLocationClient.lastLocation.addOnSuccessListener { myLocation = it }
-                } else {
-                    // todo
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return
             }

@@ -1,6 +1,7 @@
 <resources>
     <!--App-->
     <string name="app_name">BiBipHelp</string>
+    <string name="app_location_permission">"Для корректної роботи додатку потрібний дозвіл геоданих"</string>
 
     <!--Labels-->
     <string name="label_categories">Оберіть категорії</string>
