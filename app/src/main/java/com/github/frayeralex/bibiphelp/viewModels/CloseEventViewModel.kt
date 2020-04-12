@@ -2,6 +2,7 @@ package com.github.frayeralex.bibiphelp.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.github.frayeralex.bibiphelp.constatns.Collections
 import com.github.frayeralex.bibiphelp.repository.FBRefs
 
 class CloseEventViewModel : ViewModel() {
@@ -12,9 +13,9 @@ class CloseEventViewModel : ViewModel() {
     fun getIsClosed() = isClosed
 
     fun closeEvent(eventId: String, code: Int) {
-        isRequesting.value = true
+//        isRequesting.value = true
 
-        val statusRef = FBRefs.eventsRef.child(eventId).child("status")
+        val statusRef = FBRefs.eventsRef.child(eventId)
 
         val action = statusRef.setValue(code)
 
